@@ -28,3 +28,7 @@ release
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+auto_esporte.db
+auto_esporte.db-shm
+auto_esporte.db-wal
