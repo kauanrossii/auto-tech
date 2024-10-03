@@ -1,13 +1,26 @@
+import '@mdi/font/css/materialdesignicons.css';
 import { createApp } from 'vue'
+import { createVuetify } from 'vuetify/lib/framework.mjs'
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 import App from './App.vue'
 
-import './style.css'
+import router from './router/router';
 
-import './demos/ipc'
-// If you want use Node.js, the`nodeIntegration` needs to be enabled in the Main process.
-// import './demos/node'
+const vuetify = createVuetify({
+  components,
+  directives,
+  theme: {
+    defaultTheme: "light"
+  },
+  icons: {
+    defaultSet: 'mdi'
+  }
+});
 
 createApp(App)
+  .use(vuetify)
+  .use(router)
   .mount('#app')
   .$nextTick(() => {
     postMessage({ payload: 'removeLoading' }, '*')
