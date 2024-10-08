@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import CustomersView from "../views/CustomersView.vue";
-import OrdersServiceView from "../views/OrdersServiceView.vue";
-import VehiclesView from "../views/VehiclesView.vue";
+import OrdersServiceView from "../modules/orders-service/views/OrdersServiceView.vue";
 import DefaultLayout from "../layouts/DefaultLayout.vue";
+import HomeView from "../views/HomeView.vue";
+import ListCustomersView from "../modules/customers/views/ListCustomersView.vue";
+import ListVehiclesView from "../modules/vehicles/views/ListVehiclesView.vue";
+import ConfigurationsView from "../views/ConfigurationsView.vue";
 
 const router = createRouter({
     routes: [
@@ -13,10 +14,10 @@ const router = createRouter({
             redirect: "home",
             children: [
                 { path: "home", component: HomeView },
-                { path: "customers", component: CustomersView },
-                { path: "vehicles", component: VehiclesView },
+                { path: "customers", component: ListCustomersView },
+                { path: "vehicles", component: ListVehiclesView },
                 { path: "orders-service", component: OrdersServiceView },
-                { path: "configurations", component: OrdersServiceView }
+                { path: "configurations", component: ConfigurationsView }
             ]
         }
     ],
