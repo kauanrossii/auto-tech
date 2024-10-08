@@ -12,6 +12,13 @@ export default defineConfig(({ command }) => {
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG
 
   return {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use 'vuetify/styles' as *;`
+        }
+      }
+    },
     plugins: [
       vue(),
       electron({
@@ -37,7 +44,7 @@ export default defineConfig(({ command }) => {
                 // Of course, this is not absolute, just this way is relatively simple. :)
                 external: [
                   ...Object.keys('dependencies' in pkg ? pkg.dependencies : {}),
-                  'fs'
+                  'fs', 'vuetify'
                 ],
               },
             },

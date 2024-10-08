@@ -36,6 +36,8 @@
     "drizzle-kit": "^0.24.2",
     "electron": "^32.1.2",
     "electron-builder": "^24.13.3",
+    "sass": "^1.79.4",
+    "sass-loader": "^16.0.2",
     "typescript": "^5.4.2",
     "vite": "^5.1.5",
     "vite-plugin-electron": "^0.28.4",
