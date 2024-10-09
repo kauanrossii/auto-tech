@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import IBaseDisplayEnum from "../data/components/IBaseDisplayEnum";
+import IBaseDisplayEnum from "../modules/shared/models/components/IBaseDisplayEnum";
 
 const props = defineProps<{
   modelValue: string;

@@ -6,28 +6,28 @@
     <v-table>
       <thead>
         <tr>
-          <th v-for="column in rows[0].columns" :key="column.name">
+          <th v-for="column in columns" :key="column.name">
             {{ column.name }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="row in rows" :key="row.key">
-          <td v-for="column in row.columns" :key="column.name">
-            <template v-if="column.type == ColumnType.TEXT">
-              {{ column.value }}
+          <td v-for="(rowColumn, index) in row.dataColumns" :key="index">
+            <template v-if="columns[index].type == ColumnType.TEXT">
+              {{ rowColumn }}
             </template>
-            <template v-else-if="column.type == ColumnType.DATE">
-              {{ column.value }}
+            <template v-else-if="columns[index].type == ColumnType.DATE">
+              {{ rowColumn }}
             </template>
-            <template v-else-if="column.type == ColumnType.DATETIME">
-              {{ column.value }}
+            <template v-else-if="columns[index].type == ColumnType.DATETIME">
+              {{ rowColumn }}
             </template>
             <template v-else>
-              <v-tooltip :text="column.enum?.subtitle">
+              <v-tooltip :text="columns[index].enum?.find(en => en.value == rowColumn)?.subtitle">
                 <template #activator="{ props }">
                     <v-chip v-bind="props" prepend-icon="mdi-information">
-                        {{ column.enum?.title }}
+                        {{ columns[index].enum?.find(en => en.value == rowColumn)?.title }}
                     </v-chip>
                 </template>
               </v-tooltip>
@@ -40,13 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import ITableRow from "../data/components/ITableRow";
+import ITableRow from "../modules/shared/models/components/ITableRow";
 import { ColumnType } from "../data/enums/ColumnType";
+import ITableColumn from "../modules/shared/models/components/ITableColumn";
 
 defineProps<{
   total: Number;
   currentPage: Number;
   limit: Number;
+  columns: ITableColumn[];
   rows: ITableRow[];
 }>();
 </script>

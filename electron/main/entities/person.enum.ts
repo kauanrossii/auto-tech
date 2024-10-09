@@ -1,4 +1,4 @@
 export enum Person {
-    NATURAL,
-    LEGAL
+    NATURAL = 1,
+    LEGAL = 2
 };
