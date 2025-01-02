@@ -1,5 +1,5 @@
 CREATE TABLE `addresses` (
-	`id` integer PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`cep` text NOT NULL,
 	`uf` text,
 	`city` text,
@@ -9,7 +9,7 @@ CREATE TABLE `addresses` (
 );
 --> statement-breakpoint
 CREATE TABLE `customers` (
-	`id` integer PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`addressId` integer NOT NULL,
 	`type` integer NOT NULL,
 	`name` text NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE `customers` (
 );
 --> statement-breakpoint
 CREATE TABLE `ordersOfService` (
-	`id` integer PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`customerId` integer NOT NULL,
 	`vehicleId` integer NOT NULL,
 	`date` integer NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `ordersOfService` (
 );
 --> statement-breakpoint
 CREATE TABLE `parts` (
-	`id` integer PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`orderOfServiceId` integer NOT NULL,
 	`name` text NOT NULL,
 	`price` real NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `parts` (
 );
 --> statement-breakpoint
 CREATE TABLE `services` (
-	`id` integer PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`orderOfServiceId` integer NOT NULL,
 	`name` text NOT NULL,
 	`price` real NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `services` (
 );
 --> statement-breakpoint
 CREATE TABLE `vehicles` (
-	`id` integer PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
 	`model` text NOT NULL,
 	`sign` text NOT NULL,
