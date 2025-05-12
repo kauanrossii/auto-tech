@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const addresses = sqliteTable('addresses', {
-    id: integer('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     cep: text('cep').notNull(),
     uf: text('uf'),
     city: text('city'),
@@ -12,7 +12,7 @@ export const addresses = sqliteTable('addresses', {
 });
 
 export const customers = sqliteTable('customers', {
-    id: integer('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     addressId: integer('addressId').references(() => addresses.id).notNull(),
     type: integer('type').notNull(),
     name: text('name').notNull(),
@@ -31,7 +31,7 @@ export const customersRelations = relations(customers, ({ one }) => ({
 }));
 
 export const vehicles = sqliteTable('vehicles', {
-    id: integer('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     name: text('name').notNull(),
     model: text('model').notNull(),
     sign: text('sign').notNull(),
@@ -43,7 +43,7 @@ export const vehicles = sqliteTable('vehicles', {
 });
 
 export const parts = sqliteTable('parts', {
-    id: integer('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     orderOfServiceId: integer('orderOfServiceId').references(() => ordersOfService.id).notNull(),
     name: text('name').notNull(),
     price: real('price').notNull()
@@ -57,7 +57,7 @@ export const partsRelations = relations(parts, ({ one }) => ({
 }));
 
 export const services = sqliteTable('services', {
-    id: integer('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     orderOfServiceId: integer('orderOfServiceId').references(() => ordersOfService.id).notNull(),
     description: text('name').notNull(),
     price: real('price').notNull()
@@ -71,7 +71,7 @@ export const servicesRelations = relations(services, ({ one }) => ({
 }));
 
 export const ordersOfService = sqliteTable('ordersOfService', {
-    id: integer('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     customerId: integer('customerId').references(() => customers.id).notNull(),
     vehicleId: integer('vehicleId').references(() => vehicles.id).notNull(),
     date: integer('date', { mode: "timestamp" }).notNull(),

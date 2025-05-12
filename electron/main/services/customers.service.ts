@@ -4,7 +4,7 @@ import { Customer } from "../entities/customer";
 import * as schema from '../database/schema';
 import { and, eq, like, SQL } from "drizzle-orm";
 
-export class CustomersService {
+class CustomersService {
     private readonly _database: BetterSQLite3Database<typeof schema>;
 
     public constructor() {
@@ -97,3 +97,5 @@ export class CustomersService {
         })
     }
 }
+
+export default new CustomersService();

@@ -23,6 +23,10 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
 })
 
+contextBridge.exposeInMainWorld('myApi', {
+  listVehicles: () => ipcRenderer.invoke('listVehicles')
+})
+
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {

@@ -7,14 +7,12 @@ import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import path from 'node:path';
 import * as schema from './schema';
 
-let dbInstance: BetterSQLite3Database<typeof schema>;
+let dbInstance: BetterSQLite3Database<typeof schema> | null;
 
 function getDatabaseConnection() {
     if (dbInstance) {
         return dbInstance;
     }
-    fs
-    console.log()
 
     const isDev = process.env.NODE_ENV === 'development';
     const productionDbPath = path.join(app.getPath('appData'), '/auto-esporte/data');
