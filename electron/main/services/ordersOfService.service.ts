@@ -4,7 +4,7 @@ import { OrderOfService } from "../entities/orderOfService";
 import { and, eq, like, SQL } from "drizzle-orm";
 import * as schema from "../database/schema";
 
-export class OrdersOfServiceService {
+class OrdersOfServiceService {
     private readonly _database: BetterSQLite3Database<typeof schema>;
 
     public constructor() {
@@ -116,3 +116,5 @@ export class OrdersOfServiceService {
     //     })
     // }
 };
+
+export default new OrdersOfServiceService();

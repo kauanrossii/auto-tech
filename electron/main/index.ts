@@ -2,7 +2,8 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
-import { getDatabaseConnection } from './database/database'
+import { getDatabaseConnection, runMigrations } from './database/database'
+import { exposeFeatures } from './exposes/exposeServices'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -61,7 +62,9 @@ async function createWindow() {
 
 app.whenReady().then(() => {
   getDatabaseConnection();
+  runMigrations();
   createWindow();
+  exposeFeatures();
 })
 
 app.on('window-all-closed', () => {

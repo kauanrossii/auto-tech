@@ -5,7 +5,7 @@ import * as schema from "../database/schema";
 import { Vehicle } from "../entities/vehicle";
 import { and, eq, like, SQL } from "drizzle-orm";
 
-export class VehiclesService {
+class VehiclesService {
     private readonly _database: BetterSQLite3Database<typeof schema>;
 
     constructor() {
@@ -80,3 +80,5 @@ export class VehiclesService {
             .where(eq(vehiclesSchema.id, id));
     }
 }
+
+export default new VehiclesService();

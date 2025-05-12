@@ -34,20 +34,20 @@
     "@types/better-sqlite3": "^7.6.11",
     "@vitejs/plugin-vue": "^5.0.4",
     "drizzle-kit": "^0.30.1",
-    "electron": "^32.1.2",
+    "electron": "^33.2.1",
     "electron-builder": "^25.0.5",
     "sass": "^1.79.4",
     "sass-loader": "^16.0.2",
     "typescript": "^5.4.2",
-    "vite": "^5.1.5",
-    "vite-plugin-electron": "^0.28.4",
+    "vite": "^6.0.6",
+    "vite-plugin-electron": "^0.29.0",
     "vite-plugin-electron-renderer": "^0.14.5",
     "vue": "^3.4.21",
     "vue-tsc": "^2.0.6"
   },
   "dependencies": {
     "better-sqlite3": "^11.3.0",
-    "drizzle-orm": "^0.33.0",
+    "drizzle-orm": "^0.38.3",
     "vue-router": "^4.4.5",
     "vuetify": "^3.7.2"
   }
