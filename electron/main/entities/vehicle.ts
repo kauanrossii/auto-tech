@@ -1,16 +1,16 @@
-import { Fuel } from "./fuel.enum";
+import { Fuel } from "./fuel.enum"
 
 export class Vehicle {
-    id: number;
+   id: number
 
-    constructor(
-        public name: string,
-        public model: string,
-        public sign: string,
-        public year: number,
-        public fuel?: Fuel,
-        public lastMileage?: number,
-        public color?: string,
-        public chassi?: string,
-    ) { }
-};
+   constructor(
+      public model: string,
+      public brand: string,
+      public plate: string,
+      public year: number,
+      public fuel: Fuel | null,
+      public lastMileage?: number,
+      public color?: string,
+      public chassi?: string
+   ) {}
+}

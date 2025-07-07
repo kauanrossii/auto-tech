@@ -1,84 +1,85 @@
-import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
-import { getDatabaseConnection } from "../database/database";
-import { vehicles as vehiclesSchema } from "../database/schema";
-import * as schema from "../database/schema";
-import { Vehicle } from "../entities/vehicle";
-import { and, eq, like, SQL } from "drizzle-orm";
+import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
+import { getDatabaseConnection } from "../database/database"
+import { vehicles as vehiclesSchema } from "../database/schema"
+import * as schema from "../database/schema"
+import { Vehicle } from "../entities/vehicle"
+import { and, eq, like, SQL } from "drizzle-orm"
 
 class VehiclesService {
-    private readonly _database: BetterSQLite3Database<typeof schema>;
+   private readonly _database: BetterSQLite3Database<typeof schema>
 
-    constructor() {
-        this._database = getDatabaseConnection();
-    }
+   constructor() {
+      this._database = getDatabaseConnection()
+   }
 
-    async getById(id: number): Promise<Vehicle> {
-        return await this._database
-            .query
-            .vehicles
-            .findFirst({
-                where: eq(vehiclesSchema.id, id)
-            });
-    }
+   async getById(id: number): Promise<Vehicle> {
+      return await this._database.query.vehicles.findFirst({
+         where: eq(vehiclesSchema.id, id),
+      })
+   }
 
-    async getPaginated(page: number, quantity: number, filters?: { name?: string, model?: string, sign?: string }): Promise<Vehicle[]> {
-        const where: SQL[] = [];
+   async getPaginated(
+      page: number,
+      quantity: number,
+      filters?: { model?: string; brand?: string; plate?: string }
+   ): Promise<Vehicle[]> {
+      const where: SQL[] = []
 
-        if (filters) {
-            if (filters.name)
-                where.push(like(vehiclesSchema.name, `%${filters.name}%`));
+      if (filters) {
+         if (filters.model)
+            where.push(like(vehiclesSchema.model, `%${filters.model}%`))
 
-            if (filters.model)
-                where.push(like(vehiclesSchema.model, `%${filters.model}%`));
+         if (filters.brand)
+            where.push(like(vehiclesSchema.brand, `%${filters.brand}%`))
 
-            if (filters.sign)
-                where.push(like(vehiclesSchema.sign, `%${filters.sign}%`));
-        }
-        
-        return await this._database
-            .select({
-                name: vehiclesSchema.name,
-                model: vehiclesSchema.model,
-                sign: vehiclesSchema.sign,
-                year: vehiclesSchema.year
-            })
-            .from(vehiclesSchema)
-            .where(and(...where))
-            .offset(quantity * (page - 1))
-            .limit(quantity) as Vehicle[];
-    }
+         if (filters.plate)
+            where.push(like(vehiclesSchema.plate, `%${filters.plate}%`))
+      }
 
-    async insert(vehicle: Vehicle): Promise<{ id: number }> {
-        const insertResult = await this._database
-            .insert(vehiclesSchema)
-            .values(vehicle)
-            .returning({ id: vehiclesSchema.id });
-        return insertResult[0];
-    }
+      return (await this._database
+         .select({
+            model: vehiclesSchema.model,
+            brand: vehiclesSchema.brand,
+            plate: vehiclesSchema.plate,
+            year: vehiclesSchema.year,
+         })
+         .from(vehiclesSchema)
+         .where(and(...where))
+         .offset(quantity * (page - 1))
+         .limit(quantity)) as Vehicle[]
+   }
 
-    async update(vehicle: Vehicle): Promise<void> {
-        await this._database
-            .update(vehiclesSchema)
-            .set(vehicle)
-            .where(eq(vehiclesSchema.id, vehicle.id));
-    }
+   async insert(vehicle: Vehicle): Promise<{ id: number }> {
+      const insertResult = await this._database
+         .insert(vehiclesSchema)
+         .values(vehicle)
+         .returning({ id: vehiclesSchema.id })
+      return insertResult[0]
+   }
 
-    async delete(id: number): Promise<void> {
-        const existsOrderOfServices = await this._database
-            .query
-            .ordersOfService
-            .findFirst({
-                where: eq(schema.ordersOfService.vehicleId, id)
-            });
+   async update(vehicle: Vehicle): Promise<void> {
+      await this._database
+         .update(vehiclesSchema)
+         .set(vehicle)
+         .where(eq(vehiclesSchema.id, vehicle.id))
+   }
 
-        if (existsOrderOfServices) {
-            throw new Error("Cannot delete a vehicle that is linked to orders of services.");
-        }
+   async delete(id: number): Promise<void> {
+      const existsOrderOfServices =
+         await this._database.query.ordersOfService.findFirst({
+            where: eq(schema.ordersOfService.vehicleId, id),
+         })
 
-        await this._database
-            .delete(vehiclesSchema)
-            .where(eq(vehiclesSchema.id, id));
-    }
+      if (existsOrderOfServices) {
+         throw new Error(
+            "Cannot delete a vehicle that is linked to orders of services."
+         )
+      }
+
+      await this._database
+         .delete(vehiclesSchema)
+         .where(eq(vehiclesSchema.id, id))
+   }
 }
 
-export default new VehiclesService();
+export default new VehiclesService()

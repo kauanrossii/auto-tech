@@ -1,4 +1,6 @@
-<template><BaseTable :columns="tableHeaders" :rows="customers" /></template>
+<template>
+  <BaseTable :total="10" :current-page="1" :limit="10" :columns="tableHeaders" :rows="customers" />
+</template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
@@ -17,9 +19,9 @@ const tableHeaders: ITableColumn[] = [
   { name: "Identificador", type: ColumnType.TEXT },
 ];
 
-const customers: any[] = computed(() => {
-    return paginatedCustomers.value.map(customer => {
-        return Object.values(customer);
-    })
+const customers = computed(() => {
+  return paginatedCustomers.value.map(customer => {
+    return { key: String(customer.id), dataColumns: Object.values(customer) };
+  })
 });
 </script>
