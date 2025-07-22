@@ -32,6 +32,8 @@ let win: BrowserWindow | null = null
 const preload = path.join(__dirname, "../preload/index.mjs")
 const indexHtml = path.join(RENDERER_DIST, "index.html")
 
+console.log(__dirname)
+
 async function createWindow() {
    win = new BrowserWindow({
       title: "Main window",
@@ -39,6 +41,8 @@ async function createWindow() {
       webPreferences: {
          preload,
          devTools: true,
+         nodeIntegration: false,
+         contextIsolation: true,
       },
    })
 
@@ -64,7 +68,7 @@ app.whenReady().then(() => {
    getDatabaseConnection()
    runMigrations()
    createWindow()
-   handleFeatures()
+   handleFeatures(ipcMain)
 })
 
 app.on("window-all-closed", () => {

@@ -3,15 +3,12 @@
       <v-data-table
          :items="vehicleList"
          :headers="headers"
-         :items-per-page="vehicleListPagination.pageSize"
+         :items-per-page="vehicleListPagination.quantity"
          :items-per-page-options="[10, 25, 50]"
       >
          <template #top>
             <v-toolbar flat class="bg-white">
-               <v-toolbar-title>
-                  {{ vehicleList.length > 0 ? "Mais" : "Menos" }} Veículos
-                  cadastrados
-               </v-toolbar-title>
+               <v-toolbar-title> Veículos cadastrados </v-toolbar-title>
 
                <v-btn
                   class="me-2"
@@ -45,7 +42,11 @@
       </v-data-table>
    </v-sheet>
 
-   <v-dialog v-model="vehicleSelectedManipulating" max-width="500">
+   <v-dialog
+      v-model="vehicleSelectedManipulating"
+      width="40vw"
+      max-width="700px"
+   >
       <VehicleForm />
    </v-dialog>
 </template>
@@ -60,16 +61,18 @@ const {
    vehicleList,
    vehicleListFilters,
    vehicleListPagination,
+   vehicleListLoading,
    vehicleSelected,
    vehicleSelectedAction,
    vehicleSelectedLoading,
    vehicleSelectedManipulating,
 } = useVehicle()
 
-const { editVehicle, deleteVehicle, createVehicle } = useVehicleComposable()
+const { editVehicle, deleteVehicle, createVehicle, fetchVehicles } =
+   useVehicleComposable()
 
 const headers = [
-   { title: "Placa", key: "sign" },
+   { title: "Placa", key: "plate" },
    { title: "Modelo", key: "model" },
    { title: "Marca", key: "brand" },
    { title: "Ano", key: "year" },
@@ -112,10 +115,11 @@ const deleteVehicleHandler = async (id: number) => {
 }
 
 onMounted(async () => {
-   vehicleList.value = await window.management.listVehicles(
-      vehicleListPagination.value.pageNumber,
-      vehicleListPagination.value.pageSize,
-      vehicleListFilters.value
+   await fetchVehicles(
+      vehicleList,
+      vehicleListFilters,
+      vehicleListPagination,
+      vehicleListLoading
    )
 })
 </script>

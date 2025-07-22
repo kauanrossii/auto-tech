@@ -4,6 +4,7 @@ import { vehicles as vehiclesSchema } from "../database/schema"
 import * as schema from "../database/schema"
 import { Vehicle } from "../entities/vehicle"
 import { and, eq, like, SQL } from "drizzle-orm"
+import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
 
 class VehiclesService {
    private readonly _database: BetterSQLite3Database<typeof schema>
@@ -12,13 +13,13 @@ class VehiclesService {
       this._database = getDatabaseConnection()
    }
 
-   async getById(id: number): Promise<Vehicle> {
+   async getByIdAsync(id: number): Promise<Vehicle> {
       return await this._database.query.vehicles.findFirst({
          where: eq(vehiclesSchema.id, id),
       })
    }
 
-   async getPaginated(
+   async getPaginatedAsync(
       page: number,
       quantity: number,
       filters?: { model?: string; brand?: string; plate?: string }
@@ -49,22 +50,24 @@ class VehiclesService {
          .limit(quantity)) as Vehicle[]
    }
 
-   async insert(vehicle: Vehicle): Promise<{ id: number }> {
+   async insertAsync(
+      createVehicleDto: CreateVehicleDto
+   ): Promise<{ id: number }> {
       const insertResult = await this._database
          .insert(vehiclesSchema)
-         .values(vehicle)
+         .values({ ...createVehicleDto })
          .returning({ id: vehiclesSchema.id })
       return insertResult[0]
    }
 
-   async update(vehicle: Vehicle): Promise<void> {
+   async updateAsync(vehicle: Vehicle): Promise<void> {
       await this._database
          .update(vehiclesSchema)
          .set(vehicle)
          .where(eq(vehiclesSchema.id, vehicle.id))
    }
 
-   async delete(id: number): Promise<void> {
+   async deleteAsync(id: number): Promise<void> {
       const existsOrderOfServices =
          await this._database.query.ordersOfService.findFirst({
             where: eq(schema.ordersOfService.vehicleId, id),

@@ -1,60 +1,40 @@
-import { ipcMain } from "electron"
 import vehiclesService from "../services/vehicles.service"
-import { Fuel } from "../entities/fuel.enum"
-
-const vehicles = [
-   {
-      id: 1,
-      model: "Fusca",
-      brand: "Volkswagen",
-      sign: "ABC-1234",
-      year: 1970,
-      fuel: Fuel.GAS,
-      lastMileage: 100000,
-      color: "Azul",
-      chassi: "123456789",
-   },
-   {
-      id: 2,
-      model: "Civic",
-      brand: "Honda",
-      sign: "XYZ-5678",
-      year: 2015,
-      fuel: Fuel.FLEX,
-      lastMileage: 50000,
-      color: "Preto",
-      chassi: "987654321",
-   },
-]
+import { SearchVehiclesDto } from "@shared/interfaces/search-vehicles.dto"
+import { Vehicle } from "../entities/vehicle"
+import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
 
 async function getPaginatedVehicles(
    page: number,
    quantity: number,
    filters?: { name?: string; model?: string; sign?: string }
-) {
-   return vehicles
-   return await vehiclesService.getPaginated(1, 20)
+): Promise<Vehicle[]> {
+   return await vehiclesService.getPaginatedAsync(page, quantity, filters)
 }
 
 async function getVehicleById(id: number) {
-   return vehicles.find((vehicle) => vehicle.id === id) || null
-   return await vehiclesService.getById(id)
+   return await vehiclesService.getByIdAsync(id)
 }
 
-export function handleFeatures() {
+export function handleFeatures(ipcMain: Electron.IpcMain) {
    ipcMain.handle(
       "listVehicles",
-      async (
-         event,
-         page: number,
-         quantity: number,
-         filters?: { name?: string; model?: string; sign?: string }
-      ) => {
-         console.log("(main) Fetching vehicles with filters:", filters)
-         return getPaginatedVehicles(page, quantity, filters)
+      async (event, searchVehiclesDto: SearchVehiclesDto) => {
+         return await getPaginatedVehicles(
+            searchVehiclesDto.pagination.page,
+            searchVehiclesDto.pagination.quantity,
+            searchVehiclesDto.filters
+         )
       }
    )
+
    ipcMain.handle("getVehicleById", async (event, id: number) => {
       return await getVehicleById(id)
    })
+
+   ipcMain.handle(
+      "createVehicle",
+      async (event, createVehicleDto: CreateVehicleDto) => {
+         return await vehiclesService.insertAsync(createVehicleDto)
+      }
+   )
 }

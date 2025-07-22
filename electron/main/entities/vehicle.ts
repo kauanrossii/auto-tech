@@ -1,4 +1,4 @@
-import { Fuel } from "./fuel.enum"
+import { Fuel } from "@shared/enums/fuel"
 
 export class Vehicle {
    id: number
@@ -9,8 +9,8 @@ export class Vehicle {
       public plate: string,
       public year: number,
       public fuel: Fuel | null,
-      public lastMileage?: number,
-      public color?: string,
-      public chassi?: string
+      public lastMileage: number | null,
+      public color: string | null,
+      public chassi: string | null
    ) {}
 }

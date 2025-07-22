@@ -1,11 +1,34 @@
 import { Ref } from "vue"
 import { Vehicle } from "../../../../electron/main/entities/vehicle"
 import { ActionForm } from "../../../data/enums/ActionForm"
+import { SearchVehiclesFilters } from "@shared/interfaces/search-vehicles.dto"
+import { PaginationDto } from "@shared/interfaces/pagination.dto"
+import { VehicleForm } from "../types/vehicle-form"
 
 export function useVehicleComposable() {
+   const fetchVehicles = async (
+      items: Ref<Vehicle[]>,
+      filters: Ref<SearchVehiclesFilters>,
+      pagination: Ref<PaginationDto>,
+      loading: Ref<boolean>
+   ) => {
+      loading.value = true
+      try {
+         const response = await window.management.listVehicles({
+            filters: { ...filters.value },
+            pagination: { ...pagination.value },
+         })
+         items.value = response
+      } catch (error) {
+         console.error("Error fetching vehicles:", error)
+      } finally {
+         loading.value = false
+      }
+   }
+
    const editVehicle = async (
       id: number,
-      item: Ref<Vehicle>,
+      item: Ref<VehicleForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -16,21 +39,21 @@ export function useVehicleComposable() {
    }
 
    const createVehicle = (
-      item: Ref<Vehicle>,
+      item: Ref<VehicleForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
    ) => {
       item.value = {
-         id: 0,
-         model: "",
-         brand: "",
-         plate: "",
-         year: 0,
+         id: null,
+         model: null,
+         brand: null,
+         plate: null,
+         year: null,
          fuel: null,
-         lastMileage: 0,
-         color: "",
-         chassi: "",
+         lastMileage: null,
+         color: null,
+         chassi: null,
       }
       action.value = ActionForm.CREATE
       manipulating.value = true
@@ -39,7 +62,7 @@ export function useVehicleComposable() {
 
    const deleteVehicle = async (
       id: number,
-      item: Ref<Vehicle>,
+      item: Ref<VehicleForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -51,7 +74,7 @@ export function useVehicleComposable() {
 
    const fetchVehicleById = async (
       id: number,
-      item: Ref<Vehicle>,
+      item: Ref<VehicleForm>,
       loading: Ref<boolean>
    ) => {
       loading.value = true
@@ -66,21 +89,22 @@ export function useVehicleComposable() {
    }
 
    const confirmOperation = async (
-      item: Ref<Vehicle>,
+      item: Ref<VehicleForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
-   ) => {
+   ): Promise<number | void> => {
       loading.value = true
       manipulating.value = true
       try {
-         //  if (action.value === ActionForm.CREATE) {
-         //     await window.management.createVehicle(item.value)
+          if (action.value === ActionForm.CREATE) {
+             await window.management.createVehicle(item.value)
          //  } else if (action.value === ActionForm.UPDATE) {
          //     await window.management.updateVehicle(item.value)
          //  } else if (action.value === ActionForm.DELETE) {
          //     await window.management.deleteVehicle(item.value.id)
          //  }
+         return item.value.id ?? undefined
       } catch (error) {
          console.error("Error during operation:", error)
       } finally {
@@ -104,6 +128,7 @@ export function useVehicleComposable() {
       editVehicle,
       createVehicle,
       deleteVehicle,
+      fetchVehicles,
       fetchVehicleById,
       confirmOperation,
       cancelOperation,
