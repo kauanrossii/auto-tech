@@ -31,13 +31,13 @@
     "generate": "drizzle-kit generate"
   },
   "devDependencies": {
-    "@electron/rebuild": "^3.6.2",
+    "@electron/rebuild": "^4.0.1",
     "@mdi/font": "^7.4.47",
     "@types/better-sqlite3": "^7.6.11",
-    "@vitejs/plugin-vue": "^5.0.4",
     "drizzle-kit": "^0.31.5",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "electron-builder": "^26.0.12",
     "electron": "^37.1.0",
-    "electron-builder": "^25.0.5",
     "sass": "^1.79.4",
     "sass-loader": "^16.0.2",
     "typescript": "^5.4.2",
@@ -48,7 +48,7 @@
     "vue-tsc": "^2.0.6"
   },
   "dependencies": {
-    "better-sqlite3": "^11.3.0",
+    "better-sqlite3": "^12.4.1",
     "drizzle-orm": "^0.44.2",
     "vue-router": "^4.4.5",
     "vuetify": "^3.7.2"
