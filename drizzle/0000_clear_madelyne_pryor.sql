@@ -53,9 +53,9 @@ CREATE TABLE `services` (
 --> statement-breakpoint
 CREATE TABLE `vehicles` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`name` text NOT NULL,
 	`model` text NOT NULL,
-	`sign` text NOT NULL,
+	`brand` text NOT NULL,
+	`plate` text NOT NULL,
 	`year` integer NOT NULL,
 	`fuel` integer,
 	`lastMileage` integer,

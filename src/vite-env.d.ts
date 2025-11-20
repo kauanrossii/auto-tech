@@ -1,12 +1,9 @@
 /// <reference types="vite/client" />
 
-declare module '*.vue' {
-  import type { DefineComponent } from 'vue'
-  const component: DefineComponent<{}, {}, any>
-  export default component
-}
+import { Vehicle } from "../electron/main/entities/vehicle"
 
-interface Window {
-  // expose in the `electron/preload/index.ts`
-  ipcRenderer: import('electron').IpcRenderer
+declare module "*.vue" {
+   import type { DefineComponent } from "vue"
+   const component: DefineComponent<{}, {}, any>
+   export default component
 }
