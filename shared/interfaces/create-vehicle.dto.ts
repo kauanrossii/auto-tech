@@ -1,6 +1,8 @@
+import { VehicleBrands } from "@shared/enums/vehicle-brands"
+
 export interface CreateVehicleDto {
    model: string
-   brand: string
+   brand: VehicleBrands
    plate: string
    year: number
    fuel: number | null

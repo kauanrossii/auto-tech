@@ -32,7 +32,7 @@ const VehicleBrandLabels: Record<VehicleBrands, string> = {
 const VehicleBrandSelectItems = Object.entries(VehicleBrandLabels).map(
    ([key, value]) => ({
       title: value,
-      value: Number(key),
+      value: key,
    })
 )
 

@@ -37,4 +37,12 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
          return await vehiclesService.insertAsync(createVehicleDto)
       }
    )
+
+   ipcMain.handle("updateVehicle", async (event, vehicle: Vehicle) => {
+      return await vehiclesService.updateAsync(vehicle)
+   })
+
+   ipcMain.handle("deleteVehicle", async (event, id: number) => {
+      return await vehiclesService.deleteAsync(id)
+   })
 }

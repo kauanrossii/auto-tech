@@ -7,7 +7,9 @@
       "allowSyntheticDefaultImports": true,
       "baseUrl": ".",
       "paths": {
-         "@shared/*": ["shared/*"]
+         "@shared/*": [
+            "shared/*"
+         ]
       }
    },
    "include": [
@@ -15,8 +17,6 @@
       "package.json",
       "electron",
       "src/data/types/window.ts",
-      "shared/interfaces/**/*.ts",
-      "shared/enums/fuel.ts",
-      "shared/enums/payment-model.ts"
+      "shared/**/*.ts"
    ]
 }

@@ -4,6 +4,7 @@ import { ActionForm } from "../../../data/enums/ActionForm"
 import { SearchVehiclesFilters } from "@shared/interfaces/search-vehicles.dto"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
 import { VehicleForm } from "../types/vehicle-form"
+import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
 
 export function useVehicleComposable() {
    const fetchVehicles = async (
@@ -44,6 +45,17 @@ export function useVehicleComposable() {
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
    ) => {
+      cleanFormVehicle(item, action, manipulating)
+      action.value = ActionForm.CREATE
+      manipulating.value = true
+      loading.value = false
+   }
+
+   const cleanFormVehicle = (
+      item: Ref<VehicleForm>,
+      action: Ref<ActionForm>,
+      manipulating: Ref<boolean>
+   ) => {
       item.value = {
          id: null,
          model: null,
@@ -55,9 +67,8 @@ export function useVehicleComposable() {
          color: null,
          chassi: null,
       }
-      action.value = ActionForm.CREATE
-      manipulating.value = true
-      loading.value = false
+      action.value = ActionForm.NONE
+      manipulating.value = false
    }
 
    const deleteVehicle = async (
@@ -97,20 +108,21 @@ export function useVehicleComposable() {
       loading.value = true
       manipulating.value = true
       try {
-          if (action.value === ActionForm.CREATE) {
-             await window.management.createVehicle(item.value)
-         //  } else if (action.value === ActionForm.UPDATE) {
-         //     await window.management.updateVehicle(item.value)
-         //  } else if (action.value === ActionForm.DELETE) {
-         //     await window.management.deleteVehicle(item.value.id)
-         //  }
+         if (action.value === ActionForm.CREATE) {
+            await window.management.createVehicle({
+               ...item.value,
+            } as CreateVehicleDto)
+         } else if (action.value === ActionForm.UPDATE) {
+            await window.management.updateVehicle({ ...item.value } as Vehicle)
+         } else if (action.value === ActionForm.DELETE) {
+            await window.management.deleteVehicle(item.value.id!)
+         }
          return item.value.id ?? undefined
       } catch (error) {
          console.error("Error during operation:", error)
       } finally {
          loading.value = false
-         manipulating.value = false
-         action.value = ActionForm.NONE
+         cleanFormVehicle(item, action, manipulating)
       }
    }
 

@@ -1,45 +1,53 @@
 <template>
    <v-card :title="vehicleSelectedAction.toString() + ' veículo'">
       <template v-slot:text>
-         <v-row>
-            <v-col cols="12">
-               <v-text-field
-                  v-model="vehicleSelected.model"
-                  :rules="VehicleRules.model"
-                  label="Modelo"
-               ></v-text-field>
-            </v-col>
+         <v-form ref="formVehicle" v-model="formVehicleValid" lazy-validation>
+            <v-row>
+               <v-col cols="12">
+                  <v-text-field
+                     v-model="vehicleSelected.model"
+                     :rules="VehicleRules.model"
+                     :disabled="isDeletingVehicle"
+                     flat
+                     label="Modelo"
+                  ></v-text-field>
+               </v-col>
 
-            <v-col cols="12" md="6">
-               <v-autocomplete
-                  v-model="vehicleSelected.brand"
-                  :items="VehicleBrandSelectItems"
-                  label="Marca"
-               ></v-autocomplete>
-            </v-col>
+               <v-col cols="12" md="6">
+                  <v-autocomplete
+                     v-model="vehicleSelected.brand"
+                     :items="VehicleBrandSelectItems"
+                     :disabled="isDeletingVehicle"
+                     label="Marca"
+                  ></v-autocomplete>
+               </v-col>
 
-            <v-col cols="12" md="6">
-               <v-autocomplete
-                  v-model="vehicleSelected.fuel"
-                  :items="FuelSelectItems"
-                  label="Combustível"
-               ></v-autocomplete>
-            </v-col>
+               <v-col cols="12" md="6">
+                  <v-autocomplete
+                     v-model="vehicleSelected.fuel"
+                     :items="FuelSelectItems"
+                     :disabled="isDeletingVehicle"
+                     label="Combustível"
+                  ></v-autocomplete>
+               </v-col>
 
-            <v-col cols="12" md="6">
-               <v-text-field
-                  v-model="vehicleSelected.year"
-                  label="Ano"
-               ></v-text-field>
-            </v-col>
+               <v-col cols="12" md="6">
+                  <v-text-field
+                     v-model="vehicleSelected.year"
+                     :disabled="isDeletingVehicle"
+                     label="Ano"
+                  ></v-text-field>
+               </v-col>
 
-            <v-col cols="12" md="6">
-               <v-text-field
-                  v-model="vehicleSelected.color"
-                  label="Cor"
-               ></v-text-field>
-            </v-col>
-         </v-row>
+               <v-col cols="12" md="6">
+                  <v-text-field
+                     v-model="vehicleSelected.color"
+                     :disabled="isDeletingVehicle"
+                     label="Cor"
+                  ></v-text-field>
+               </v-col>
+            </v-row>
+         </v-form>
       </template>
 
       <v-divider></v-divider>
@@ -61,7 +69,8 @@ import { useVehicleComposable } from "../composables/vehicleComposable"
 import { FuelSelectItems } from "../../../data/constants/fuel-items"
 import { VehicleBrandSelectItems } from "@src/data/constants/vehicle-brands-items"
 import { VehicleRules } from "../rules/vehicle-rules"
-import { ref } from "vue"
+import { computed, onMounted, ref } from "vue"
+import { ActionForm } from "@src/data/enums/ActionForm"
 
 const { fetchVehicles, fetchVehicleById, cancelOperation, confirmOperation } =
    useVehicleComposable()
@@ -79,6 +88,10 @@ const vehicleSelectedLoading = injectStrict(VehicleKeys.vehicleSelectedLoading)
 const formVehicleValid = ref(false)
 const formVehicle = ref(Object.assign({}, vehicleSelected.value))
 
+const isDeletingVehicle = computed(() => {
+   return vehicleSelectedAction.value === ActionForm.DELETE
+})
+
 const cancel = () => {
    cancelOperation(
       vehicleSelectedLoading,
@@ -90,7 +103,11 @@ const cancel = () => {
 const confirm = async () => {
    if (formVehicle.value === null) return
 
-   if (!formVehicleValid.value) return
+   if (!formVehicleValid.value) {
+      return
+   }
+
+   console.log("Submitting form:", vehicleSelected.value)
 
    const key = await confirmOperation(
       vehicleSelected,
@@ -108,4 +125,8 @@ const confirm = async () => {
       vehicleListLoading
    )
 }
+
+onMounted(() => {
+   console.log(VehicleBrandSelectItems)
+})
 </script>

@@ -39,6 +39,7 @@ class VehiclesService {
 
       return (await this._database
          .select({
+            id: vehiclesSchema.id,
             model: vehiclesSchema.model,
             brand: vehiclesSchema.brand,
             plate: vehiclesSchema.plate,

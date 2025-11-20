@@ -16,7 +16,6 @@
                   prepend-icon="mdi-plus"
                   rounded="sm"
                   text="Cadastrar veículo"
-                  border
                   @click="createVehicleHandler"
                ></v-btn>
             </v-toolbar>
