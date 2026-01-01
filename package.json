@@ -37,7 +37,7 @@
     "drizzle-kit": "^0.31.5",
     "@vitejs/plugin-vue": "^6.0.1",
     "electron-builder": "^26.0.12",
-    "electron": "^37.1.0",
+    "electron": "^39.2.7",
     "sass": "^1.79.4",
     "sass-loader": "^16.0.2",
     "typescript": "^5.4.2",
