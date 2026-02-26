@@ -2,17 +2,14 @@ import vehiclesService from "../services/vehicles.service"
 import { SearchVehiclesDto } from "@shared/interfaces/search-vehicles.dto"
 import { Vehicle } from "../entities/vehicle"
 import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
+import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 
 async function getPaginatedVehicles(
    page: number,
    quantity: number,
    filters?: { name?: string; model?: string; sign?: string }
-): Promise<Vehicle[]> {
+): Promise<PaginatedResultDto<Vehicle>> {
    return await vehiclesService.getPaginatedAsync(page, quantity, filters)
-}
-
-async function getVehicleById(id: number) {
-   return await vehiclesService.getByIdAsync(id)
 }
 
 export function handleFeatures(ipcMain: Electron.IpcMain) {
@@ -28,7 +25,11 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
    )
 
    ipcMain.handle("getVehicleById", async (event, id: number) => {
-      return await getVehicleById(id)
+      return await vehiclesService.getByIdAsync(id)
+   })
+
+   ipcMain.handle("getVehicleByPlate", async (event, plate: string) => {
+      return await vehiclesService.getByPlateAsync(plate)
    })
 
    ipcMain.handle(

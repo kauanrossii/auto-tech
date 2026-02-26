@@ -7,7 +7,7 @@ export class Vehicle {
       public model: string,
       public brand: string,
       public plate: string,
-      public year: number,
+      public year: number | null,
       public fuel: Fuel | null,
       public lastMileage: number | null,
       public color: string | null,

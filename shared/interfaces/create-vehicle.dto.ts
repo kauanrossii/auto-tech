@@ -4,7 +4,7 @@ export interface CreateVehicleDto {
    model: string
    brand: VehicleBrands
    plate: string
-   year: number
+   year: number | null
    fuel: number | null
    lastMileage: number | null
    color: string | null

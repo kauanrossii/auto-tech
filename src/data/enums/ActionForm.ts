@@ -1,6 +1,6 @@
 export enum ActionForm {
    NONE = "Nenhum",
-   CREATE = "Criar",
+   CREATE = "Cadastrar",
    UPDATE = "Atualizar",
    DELETE = "Deletar",
 }

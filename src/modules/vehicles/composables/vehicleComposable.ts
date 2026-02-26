@@ -19,7 +19,8 @@ export function useVehicleComposable() {
             filters: { ...filters.value },
             pagination: { ...pagination.value },
          })
-         items.value = response
+         items.value = response.items
+         pagination.value.totalItems = response.totalItems
       } catch (error) {
          console.error("Error fetching vehicles:", error)
       } finally {
@@ -99,14 +100,28 @@ export function useVehicleComposable() {
       }
    }
 
+   const fetchVehicleByPlate = async (
+      plate: string,
+      item: Ref<VehicleForm>,
+      loading: Ref<boolean>
+   ) => {
+      loading.value = true
+      try {
+         const response = await window.management.getVehicleByPlate(plate)
+         item.value = response
+      } catch (error) {
+         console.error("Error fetching vehicle by plate:", error)
+      } finally {
+         loading.value = false
+      }
+   }
+
    const confirmOperation = async (
       item: Ref<VehicleForm>,
       loading: Ref<boolean>,
-      manipulating: Ref<boolean>,
       action: Ref<ActionForm>
    ): Promise<number | void> => {
       loading.value = true
-      manipulating.value = true
       try {
          if (action.value === ActionForm.CREATE) {
             await window.management.createVehicle({
@@ -122,7 +137,6 @@ export function useVehicleComposable() {
          console.error("Error during operation:", error)
       } finally {
          loading.value = false
-         cleanFormVehicle(item, action, manipulating)
       }
    }
 
@@ -142,6 +156,7 @@ export function useVehicleComposable() {
       deleteVehicle,
       fetchVehicles,
       fetchVehicleById,
+      fetchVehicleByPlate,
       confirmOperation,
       cancelOperation,
    }

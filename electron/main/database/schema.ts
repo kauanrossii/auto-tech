@@ -37,7 +37,7 @@ export const vehicles = sqliteTable("vehicles", {
    model: text("model").notNull(),
    brand: text("brand").notNull(),
    plate: text("plate").notNull(),
-   year: integer("year").notNull(),
+   year: integer("year"),
    fuel: integer("fuel"),
    lastMileage: integer("lastMileage"),
    color: text("color"),

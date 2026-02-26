@@ -15,5 +15,7 @@ export function exposeServicesInMainWorld(
          ipcRenderer.invoke("updateVehicle", vehicle),
       deleteVehicle: (id: number) => ipcRenderer.invoke("deleteVehicle", id),
       getVehicleById: (id: number) => ipcRenderer.invoke("getVehicleById", id),
+      getVehicleByPlate: (plate: string) =>
+         ipcRenderer.invoke("getVehicleByPlate", plate),
    })
 }

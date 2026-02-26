@@ -11,7 +11,7 @@ export function useVehicle() {
    const vehicleListLoading = ref<boolean>(false)
    const vehicleListPagination = ref<PaginationDto>({
       page: 1,
-      quantity: 25,
+      quantity: 10,
       totalItems: 0,
    })
    const vehicleListFilters = ref<SearchVehiclesFilters>({

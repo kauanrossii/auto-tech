@@ -5,6 +5,7 @@ import * as schema from "../database/schema"
 import { Vehicle } from "../entities/vehicle"
 import { and, eq, like, SQL } from "drizzle-orm"
 import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
+import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 
 class VehiclesService {
    private readonly _database: BetterSQLite3Database<typeof schema>
@@ -19,11 +20,17 @@ class VehiclesService {
       })
    }
 
+   async getByPlateAsync(plate: string): Promise<Vehicle> {
+      return await this._database.query.vehicles.findFirst({
+         where: eq(vehiclesSchema.plate, plate),
+      })
+   }
+
    async getPaginatedAsync(
       page: number,
       quantity: number,
       filters?: { model?: string; brand?: string; plate?: string }
-   ): Promise<Vehicle[]> {
+   ): Promise<PaginatedResultDto<Vehicle>> {
       const where: SQL[] = []
 
       if (filters) {
@@ -37,23 +44,42 @@ class VehiclesService {
             where.push(like(vehiclesSchema.plate, `%${filters.plate}%`))
       }
 
-      return (await this._database
+      const totalItems = await this._database.$count(
+         vehiclesSchema,
+         and(...where)
+      )
+
+      const vehicles = (await this._database
          .select({
             id: vehiclesSchema.id,
             model: vehiclesSchema.model,
             brand: vehiclesSchema.brand,
             plate: vehiclesSchema.plate,
             year: vehiclesSchema.year,
+            color: vehiclesSchema.color,
          })
          .from(vehiclesSchema)
          .where(and(...where))
          .offset(quantity * (page - 1))
          .limit(quantity)) as Vehicle[]
+
+      return {
+         items: vehicles,
+         totalItems: totalItems,
+      }
    }
 
    async insertAsync(
       createVehicleDto: CreateVehicleDto
    ): Promise<{ id: number }> {
+      const samePlateVehicle = await this._database.query.vehicles.findFirst({
+         where: eq(vehiclesSchema.plate, createVehicleDto.plate),
+      })
+
+      if (samePlateVehicle) {
+         throw new Error("A vehicle with the same plate already exists.")
+      }
+
       const insertResult = await this._database
          .insert(vehiclesSchema)
          .values({ ...createVehicleDto })

@@ -1,10 +1,18 @@
 <template>
-   <v-sheet class="w-100 h-75 d-flex justify-center">
-      <v-data-table
-         :items="vehicleList"
+   <v-sheet class="w-100 h-100 d-flex justify-center">
+      <v-data-table-server
+         hover
+         loading-text="Carregando dados de veículos"
          :headers="headers"
+         :items="vehicleList"
+         :items-length="vehicleListPagination.totalItems"
+         :page="vehicleListPagination.page"
          :items-per-page="vehicleListPagination.quantity"
          :items-per-page-options="[10, 25, 50]"
+         :loading="vehicleListLoading"
+         @update:options="
+            ({ page, itemsPerPage }) => updateOptions(page, itemsPerPage)
+         "
       >
          <template #top>
             <v-toolbar flat class="bg-white">
@@ -13,8 +21,8 @@
                <v-btn
                   class="me-2"
                   variant="elevated"
-                  prepend-icon="mdi-plus"
                   rounded="sm"
+                  color="primary"
                   text="Cadastrar veículo"
                   @click="createVehicleHandler"
                ></v-btn>
@@ -22,30 +30,61 @@
          </template>
 
          <template v-slot:item.actions="{ item }">
-            <div class="d-flex ga-2 justify-end">
-               <v-icon
-                  color="medium-emphasis"
-                  icon="mdi-pencil"
-                  size="small"
-                  @click="editVehicleHandler(item.id)"
-               ></v-icon>
+            <div class="d-flex ga-2 justify-center">
+               <v-tooltip
+                  text="Visualizar"
+                  location="top"
+                  location-strategy="connected"
+               >
+                  <template #activator="{ props }">
+                     <v-btn
+                        v-bind="props"
+                        color="medium-emphasis"
+                        icon="mdi-eye"
+                        variant="text"
+                        @click="editVehicleHandler(item.id)"
+                     ></v-btn>
+                  </template>
+               </v-tooltip>
 
-               <v-icon
-                  color="medium-emphasis"
-                  icon="mdi-delete"
-                  size="small"
-                  @click="deleteVehicleHandler(item.id)"
-               ></v-icon>
+               <v-tooltip
+                  text="Editar"
+                  location="top"
+                  location-strategy="connected"
+               >
+                  <template #activator="{ props }">
+                     <v-btn
+                        v-bind="props"
+                        color="medium-emphasis"
+                        icon="mdi-pencil"
+                        variant="text"
+                        @click="editVehicleHandler(item.id)"
+                     ></v-btn>
+                  </template>
+               </v-tooltip>
+
+               <v-tooltip
+                  text="Deletar"
+                  location="top"
+                  location-strategy="connected"
+               >
+                  <template #activator="{ props }">
+                     <v-btn
+                        v-bind="props"
+                        color="medium-emphasis"
+                        icon="mdi-delete"
+                        variant="text"
+                        @click="deleteVehicleHandler(item.id)"
+                     >
+                     </v-btn>
+                  </template>
+               </v-tooltip>
             </div>
          </template>
-      </v-data-table>
+      </v-data-table-server>
    </v-sheet>
 
-   <v-dialog
-      v-model="vehicleSelectedManipulating"
-      width="40vw"
-      max-width="700px"
-   >
+   <v-dialog v-model="vehicleSelectedManipulating" max-width="700px">
       <VehicleForm />
    </v-dialog>
 </template>
@@ -77,10 +116,11 @@ const headers = [
    { title: "Ano", key: "year" },
    { title: "Cor", key: "color" },
    {
-      title: "Actions",
+      title: "Ações",
       key: "actions",
       align: "center" as const,
       sortable: false,
+      width: "50px",
    },
 ]
 
@@ -110,6 +150,17 @@ const deleteVehicleHandler = async (id: number) => {
       vehicleSelectedLoading,
       vehicleSelectedManipulating,
       vehicleSelectedAction
+   )
+}
+
+const updateOptions = async (page: number, itemsPerPage: number) => {
+   vehicleListPagination.value.page = page
+   vehicleListPagination.value.quantity = itemsPerPage
+   await fetchVehicles(
+      vehicleList,
+      vehicleListFilters,
+      vehicleListPagination,
+      vehicleListLoading
    )
 }
 
