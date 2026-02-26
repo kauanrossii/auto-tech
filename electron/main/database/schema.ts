@@ -13,9 +13,7 @@ export const addresses = sqliteTable("addresses", {
 
 export const customers = sqliteTable("customers", {
    id: integer("id").primaryKey({ autoIncrement: true }),
-   addressId: integer("addressId")
-      .references(() => addresses.id)
-      .notNull(),
+   addressId: integer("addressId").references(() => addresses.id),
    type: integer("type").notNull(),
    name: text("name").notNull(),
    govIdentifier: text("govIdentifier"),

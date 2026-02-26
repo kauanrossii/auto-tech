@@ -2,7 +2,7 @@ import { InjectionKey, Ref } from "vue"
 import { Vehicle } from "../../../../electron/main/entities/vehicle"
 import { ActionForm } from "../../../data/enums/ActionForm"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
-import { SearchVehiclesFilters } from "@shared/interfaces/search-vehicles.dto"
+import { SearchVehiclesFilters } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { VehicleForm } from "../types/vehicle-form"
 
 export const VehicleKeys: {

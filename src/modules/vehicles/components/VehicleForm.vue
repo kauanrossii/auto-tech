@@ -1,6 +1,9 @@
 <template>
-   <v-card :title="title">
-      <template v-slot:text>
+   <v-card class="d-flex flex-column">
+      <v-card-title :class="titleBackgroundClass" class="py-3">{{
+         title
+      }}</v-card-title>
+      <v-card-text class="overflow-y-auto flex-grow-1 pa-4">
          <v-form ref="formVehicle" v-model="formVehicleValid" lazy-validation>
             <v-row>
                <v-col cols="4">
@@ -107,15 +110,15 @@
                </v-col>
             </v-row>
          </v-form>
-      </template>
+      </v-card-text>
 
       <v-divider></v-divider>
 
       <v-card-actions class="ga-4 bg-surface-light">
          <v-btn
             text="Cancelar"
-            color="red"
-            variant="elevated"
+            color="primary"
+            variant="tonal"
             rounded="sm"
             class="px-4"
             @click="cancel"
@@ -180,6 +183,19 @@ const title = computed(() => {
          return "Deseja mesmo deletar o veículo?"
       default:
          return ""
+   }
+})
+
+const titleBackgroundClass = computed(() => {
+   switch (vehicleSelectedAction.value) {
+      case ActionForm.CREATE:
+         return "bg-blue-darken-3"
+      case ActionForm.UPDATE:
+         return "bg-blue-grey"
+      case ActionForm.DELETE:
+         return "bg-red-darken-3"
+      default:
+         return "bg-surface-light"
    }
 })
 

@@ -3,7 +3,7 @@ import { Customer } from "../../../../electron/main/entities/customer"
 import { ActionForm } from "../../../data/enums/ActionForm"
 import { CustomerKeys } from "./customerKeys"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
-import { SearchCustomersFilters } from "@shared/interfaces/search-customers.dto"
+import { SearchCustomersFilters } from "@shared/interfaces/customers/search-customers.dto"
 
 export function useCustomer() {
    const customerList = ref<Customer[]>([])

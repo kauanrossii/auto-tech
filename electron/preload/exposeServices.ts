@@ -1,6 +1,6 @@
-import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
-import { SearchVehiclesDto } from "@shared/interfaces/search-vehicles.dto"
-import { SearchCustomersDto } from "@shared/interfaces/search-customers.dto"
+import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
+import { SearchVehiclesDto } from "@shared/interfaces/vehicles/search-vehicles.dto"
+import { SearchCustomersDto } from "@shared/interfaces/customers/search-customers.dto"
 import { Vehicle } from "electron/main/entities/vehicle"
 import { Customer } from "electron/main/entities/customer"
 

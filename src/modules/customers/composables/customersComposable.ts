@@ -1,8 +1,10 @@
 import { Ref } from "vue"
 import { Customer } from "../../../../electron/main/entities/customer"
 import { ActionForm } from "../../../data/enums/ActionForm"
-import { SearchCustomersFilters } from "@shared/interfaces/search-customers.dto"
+import { SearchCustomersFilters } from "@shared/interfaces/customers/search-customers.dto"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
+import { CustomerForm } from "../types/customer-form"
+import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 
 export function useCustomerComposable() {
    const fetchCustomers = async (
@@ -28,7 +30,7 @@ export function useCustomerComposable() {
 
    const editCustomer = async (
       id: number,
-      item: Ref<Customer>,
+      item: Ref<CustomerForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -39,7 +41,7 @@ export function useCustomerComposable() {
    }
 
    const createCustomer = (
-      item: Ref<Customer>,
+      item: Ref<CustomerForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -51,23 +53,36 @@ export function useCustomerComposable() {
    }
 
    const cleanFormCustomer = (
-      item: Ref<Customer>,
+      item: Ref<CustomerForm>,
       action: Ref<ActionForm>,
       manipulating: Ref<boolean>
    ) => {
       item.value = {
-         id: 0,
+         id: null,
          name: "",
-         type: 1,
-         addressId: 0,
-      } as Customer
+         type: null,
+         govDocument: null,
+         govIdentifier: null,
+         cellphone: null,
+         phone: null,
+         email: null,
+         address: {
+            id: null,
+            cep: "",
+            uf: null,
+            city: null,
+            district: null,
+            street: null,
+            unit: null,
+         },
+      } as CustomerForm
       action.value = ActionForm.NONE
       manipulating.value = false
    }
 
    const deleteCustomer = async (
       id: number,
-      item: Ref<Customer>,
+      item: Ref<CustomerForm>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -79,7 +94,7 @@ export function useCustomerComposable() {
 
    const fetchCustomerById = async (
       id: number,
-      item: Ref<Customer>,
+      item: Ref<CustomerForm>,
       loading: Ref<boolean>
    ) => {
       loading.value = true
@@ -96,28 +111,40 @@ export function useCustomerComposable() {
    }
 
    const confirmOperation = async (
-      item: Ref<Customer>,
+      item: Ref<CustomerForm>,
       loading: Ref<boolean>,
-      manipulating: Ref<boolean>,
       action: Ref<ActionForm>
    ): Promise<number | void> => {
       loading.value = true
-      manipulating.value = true
       try {
          if (action.value === ActionForm.CREATE) {
-            const response = await window.management.createCustomer(item.value)
-            if (response && typeof response === "number") {
-               item.value.id = response
+            const customerDto: CreateCustomerDto = {
+               name: item.value.name,
+               type: item.value.type!,
+               email: item.value.email,
+               govDocument: item.value.govDocument,
+               govIdentifier: item.value.govIdentifier,
+               cellphone: item.value.cellphone,
+               phone: item.value.phone,
+               address: {
+                  id: item.value.address?.id ?? null,
+                  cep: item.value.address?.cep!,
+                  uf: item.value.address?.uf ?? null,
+                  city: item.value.address?.city ?? null,
+                  district: item.value.address?.district ?? null,
+                  street: item.value.address?.street ?? null,
+                  unit: item.value.address?.unit ?? null,
+               },
             }
+            await window.management.createCustomer(customerDto)
          } else if (action.value === ActionForm.UPDATE) {
-            await window.management.updateCustomer(item.value)
+            await window.management.updateCustomer(item.value as Customer)
          } else if (action.value === ActionForm.DELETE) {
             await window.management.deleteCustomer(item.value.id!)
          }
          return item.value.id ?? undefined
       } catch (error) {
          console.error("Error during operation:", error)
-         cleanFormCustomer(item, action, manipulating)
          return undefined
       } finally {
          loading.value = false

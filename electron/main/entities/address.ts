@@ -1,12 +1,12 @@
 export class Address {
-    id: number;
+   id: number
 
-    constructor(
-        public cep: string,
-        public uf?: string,
-        public city?: string,
-        public district?: string,
-        public street?: string,
-        public unit?: string
-    ) {}
+   constructor(
+      public cep: string,
+      public uf: string | null,
+      public city: string | null,
+      public district: string | null,
+      public street: string | null,
+      public unit: string | null
+   ) {}
 }

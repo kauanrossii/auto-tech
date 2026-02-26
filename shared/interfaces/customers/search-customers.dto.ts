@@ -1,4 +1,4 @@
-import { PaginationDto } from "./pagination.dto"
+import { PaginationDto } from "../pagination.dto"
 
 interface SearchCustomersDto {
    pagination: PaginationDto

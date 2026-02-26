@@ -1,10 +1,10 @@
 import { Ref } from "vue"
 import { Vehicle } from "../../../../electron/main/entities/vehicle"
 import { ActionForm } from "../../../data/enums/ActionForm"
-import { SearchVehiclesFilters } from "@shared/interfaces/search-vehicles.dto"
+import { SearchVehiclesFilters } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
 import { VehicleForm } from "../types/vehicle-form"
-import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
+import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
 
 export function useVehicleComposable() {
    const fetchVehicles = async (

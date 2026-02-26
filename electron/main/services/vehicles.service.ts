@@ -4,7 +4,7 @@ import { vehicles as vehiclesSchema } from "../database/schema"
 import * as schema from "../database/schema"
 import { Vehicle } from "../entities/vehicle"
 import { and, eq, like, SQL } from "drizzle-orm"
-import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
+import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 
 class VehiclesService {

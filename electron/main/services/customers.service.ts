@@ -4,6 +4,7 @@ import { Customer } from "../entities/customer"
 import * as schema from "../database/schema"
 import { and, eq, like, SQL } from "drizzle-orm"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
+import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 
 class CustomersService {
    private readonly _database: BetterSQLite3Database<typeof schema>
@@ -73,19 +74,25 @@ class CustomersService {
       }
    }
 
-   async insert(customer: Customer): Promise<number> {
+   async insert(createCustomerDto: CreateCustomerDto): Promise<number> {
       const customerId = await this._database.transaction(
          async (transaction) => {
-            const addressResult = await transaction
-               .insert(schema.addresses)
-               .values(customer.address)
-               .returning({ id: schema.addresses.id })
-
-            customer.addressId = addressResult[0].id
+            let addressId = null
+            if (createCustomerDto.address) {
+               if (createCustomerDto.address.id) {
+                  addressId = createCustomerDto.address.id
+               } else {
+                  const addressResult = await transaction
+                     .insert(schema.addresses)
+                     .values(createCustomerDto.address)
+                     .returning({ id: schema.addresses.id })
+                  addressId = addressResult[0].id
+               }
+            }
 
             const customerResult = await this._database
                .insert(schema.customers)
-               .values(customer)
+               .values({ ...createCustomerDto, addressId })
                .returning({ id: schema.customers.id })
             return customerResult[0].id
          }

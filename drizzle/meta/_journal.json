@@ -15,6 +15,13 @@
       "when": 1772070358806,
       "tag": "0001_cloudy_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1772078478067,
+      "tag": "0002_lyrical_polaris",
+      "breakpoints": true
     }
   ]
 }

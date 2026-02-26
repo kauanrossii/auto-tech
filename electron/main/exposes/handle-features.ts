@@ -1,10 +1,11 @@
-import { CreateVehicleDto } from "@shared/interfaces/create-vehicle.dto"
-import { SearchCustomersDto } from "@shared/interfaces/search-customers.dto"
-import { SearchVehiclesDto } from "@shared/interfaces/search-vehicles.dto"
+import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
+import { SearchCustomersDto } from "@shared/interfaces/customers/search-customers.dto"
+import { SearchVehiclesDto } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { Customer } from "../entities/customer"
 import { Vehicle } from "../entities/vehicle"
 import customersService from "../services/customers.service"
 import vehiclesService from "../services/vehicles.service"
+import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 
 export function handleFeatures(ipcMain: Electron.IpcMain) {
    //#region Vehicles
@@ -59,9 +60,12 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
       return await customersService.getById(id)
    })
 
-   ipcMain.handle("createCustomer", async (event, customer: Customer) => {
-      return await customersService.insert(customer)
-   })
+   ipcMain.handle(
+      "createCustomer",
+      async (event, createCustomerDto: CreateCustomerDto) => {
+         return await customersService.insert(createCustomerDto)
+      }
+   )
 
    ipcMain.handle("updateCustomer", async (event, customer: Customer) => {
       return await customersService.update(customer)
