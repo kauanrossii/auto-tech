@@ -3,7 +3,7 @@
       <v-card-title :class="titleBackgroundClass" class="py-3">{{
          title
       }}</v-card-title>
-      <v-card-text class="overflow-y-auto flex-grow-1 pa-4">
+      <v-card-text class="overflow-y-auto flex-grow-1 pa-6">
          <v-form ref="formVehicle" v-model="formVehicleValid" lazy-validation>
             <v-row>
                <v-col cols="4">
@@ -120,7 +120,7 @@
             color="primary"
             variant="tonal"
             rounded="sm"
-            class="px-4"
+            class="px-7"
             @click="cancel"
          ></v-btn>
 
@@ -129,7 +129,7 @@
             color="primary"
             text="Confirmar"
             rounded="sm"
-            class="px-4"
+            class="px-7"
             @click="confirm"
             :disabled="
                vehicleSelectedLoading ||

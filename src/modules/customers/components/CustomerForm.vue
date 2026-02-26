@@ -3,7 +3,7 @@
       <v-card-title :class="titleBackgroundClass" class="py-3">{{
          title
       }}</v-card-title>
-      <v-card-text class="overflow-y-auto flex-grow-1 pa-4">
+      <v-card-text class="overflow-y-auto flex-grow-1 pa-8">
          <v-form ref="formCustomer" v-model="formCustomerValid" lazy-validation>
             <v-row>
                <v-col cols="12" md="8">
@@ -193,13 +193,13 @@
          </v-form>
       </v-card-text>
 
-      <v-card-actions class="ga-4 py-3">
+      <v-card-actions class="ga-6 py-3">
          <v-btn
             text="Cancelar"
-            color="red"
-            variant="elevated"
+            color="primary"
+            variant="tonal"
             rounded="sm"
-            class="px-4"
+            class="px-7"
             @click="cancel"
          ></v-btn>
 
@@ -208,7 +208,7 @@
             color="primary"
             text="Confirmar"
             rounded="sm"
-            class="px-4"
+            class="px-7"
             @click="confirm"
             :disabled="
                customerSelectedLoading ||
