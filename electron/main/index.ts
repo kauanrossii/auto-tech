@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url"
 import path from "node:path"
 import os from "node:os"
 import { getDatabaseConnection, runMigrations } from "./database/database"
-import { handleFeatures } from "./exposes/handleServices"
+import { handleFeatures } from "./exposes/handle-features"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
