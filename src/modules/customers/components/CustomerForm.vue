@@ -11,9 +11,12 @@
                      <v-label for="name-input" class="mb-1">Nome *</v-label>
                      <v-text-field
                         id="name-input"
-                        v-model="customerSelected.name"
+                        v-model="formData.name"
                         :disabled="isDeletingCustomer"
                         :rules="CustomerRules.name"
+                        :error="nameError"
+                        :error-messages="nameMessages"
+                        @blur="handleNameBlur"
                      >
                      </v-text-field>
                   </div>
@@ -26,7 +29,7 @@
                      >
                      <v-autocomplete
                         id="type-input"
-                        v-model="customerSelected.type"
+                        v-model="formData.type"
                         :items="PersonTypeItems"
                         item-title="title"
                         item-value="value"
@@ -41,7 +44,7 @@
                      <v-label for="email-input" class="mb-1">E-mail</v-label>
                      <v-text-field
                         id="email-input"
-                        v-model="customerSelected.email"
+                        v-model="formData.email"
                         :disabled="isDeletingCustomer"
                         type="email"
                         :rules="CustomerRules.email"
@@ -57,7 +60,7 @@
                      >
                      <v-text-field
                         id="cellphone-input"
-                        v-model="customerSelected.cellphone"
+                        v-model="formData.cellphone"
                         :disabled="isDeletingCustomer"
                      >
                      </v-text-field>
@@ -71,7 +74,7 @@
                      >
                      <v-text-field
                         id="phone-input"
-                        v-model="customerSelected.phone"
+                        v-model="formData.phone"
                         :disabled="isDeletingCustomer"
                      >
                      </v-text-field>
@@ -85,8 +88,11 @@
                      }}</v-label>
                      <v-text-field
                         id="govDocument-input"
-                        v-model="customerSelected.govDocument"
+                        v-model="formData.govDocument"
                         :disabled="isDeletingCustomer"
+                        :error="govDocumentError"
+                        :error-messages="govDocumentMessages"
+                        @blur="handleGovDocumentBlur"
                      >
                      </v-text-field>
                   </div>
@@ -99,8 +105,11 @@
                      }}</v-label>
                      <v-text-field
                         id="govIdentifier-input"
-                        v-model="customerSelected.govIdentifier"
+                        v-model="formData.govIdentifier"
                         :disabled="isDeletingCustomer"
+                        :error="govIdentifierError"
+                        :error-messages="govIdentifierMessages"
+                        @blur="handleGovIdentifierBlur"
                      >
                      </v-text-field>
                   </div>
@@ -122,7 +131,7 @@
                      <v-label for="cep-input" class="mb-1">CEP</v-label>
                      <v-text-field
                         id="cep-input"
-                        v-model="customerSelected.address!.cep"
+                        v-model="formData.address!.cep"
                         :disabled="isDeletingCustomer"
                         placeholder="00000-000"
                      >
@@ -135,7 +144,7 @@
                      <v-label for="uf-input" class="mb-1">UF</v-label>
                      <v-autocomplete
                         id="uf-input"
-                        v-model="customerSelected.address!.uf"
+                        v-model="formData.address!.uf"
                         :items="stateItems"
                         :disabled="isDeletingCustomer"
                      ></v-autocomplete>
@@ -147,7 +156,7 @@
                      <v-label for="city-input" class="mb-1">Cidade</v-label>
                      <v-text-field
                         id="city-input"
-                        v-model="customerSelected.address!.city"
+                        v-model="formData.address!.city"
                         :disabled="isDeletingCustomer"
                      >
                      </v-text-field>
@@ -159,7 +168,7 @@
                      <v-label for="street-input" class="mb-1">Rua</v-label>
                      <v-text-field
                         id="street-input"
-                        v-model="customerSelected.address!.street"
+                        v-model="formData.address!.street"
                         :disabled="isDeletingCustomer"
                      >
                      </v-text-field>
@@ -171,7 +180,7 @@
                      <v-label for="district-input" class="mb-1">Bairro</v-label>
                      <v-text-field
                         id="district-input"
-                        v-model="customerSelected.address!.district"
+                        v-model="formData.address!.district"
                         :disabled="isDeletingCustomer"
                      >
                      </v-text-field>
@@ -183,7 +192,7 @@
                      <v-label for="unit-input" class="mb-1">Nº/Apto</v-label>
                      <v-text-field
                         id="unit-input"
-                        v-model="customerSelected.address!.unit"
+                        v-model="formData.address!.unit"
                         :disabled="isDeletingCustomer"
                      >
                      </v-text-field>
@@ -226,8 +235,10 @@ import { CustomerKeys } from "../providers/customerKeys"
 import { useCustomerComposable } from "../composables/customersComposable"
 import { CustomerRules } from "../rules/customer-rules"
 import { PersonType } from "../models/constants/CustomerType"
-import { computed, ref } from "vue"
+import { computed, ref, type Ref, onMounted } from "vue"
 import { ActionForm } from "@src/data/enums/ActionForm"
+import { CustomerForm } from "../types/customer-form"
+import { Customer } from "electron/main/entities/customer"
 
 const { fetchCustomers, cancelOperation, confirmOperation } =
    useCustomerComposable()
@@ -245,6 +256,34 @@ const customerSelectedLoading = injectStrict(
    CustomerKeys.customerSelectedLoading
 )
 const formCustomerValid = ref(false)
+const formData = ref<CustomerForm>({
+   id: null,
+   name: "",
+   type: null,
+   email: "",
+   cellphone: "",
+   phone: "",
+   govDocument: "",
+   govIdentifier: "",
+   address: {
+      id: null,
+      cep: "",
+      uf: "",
+      city: "",
+      street: "",
+      district: "",
+      unit: "",
+   },
+})
+const nameMessages = ref<string[]>([])
+const nameError = ref(false)
+const govDocumentMessages = ref<string[]>([])
+const govDocumentError = ref(false)
+const govIdentifierMessages = ref<string[]>([])
+const govIdentifierError = ref(false)
+
+const DUPLICATE_CUSTOMER_ERROR_MESSAGE =
+   "Esse cliente já foi cadastrado anteriormente no sistema"
 
 const PersonTypeItems = PersonType
 
@@ -283,17 +322,17 @@ const isDeletingCustomer = computed(() => {
 })
 
 const govDocumentLabel = computed(() => {
-   if (!customerSelected.value.type) {
+   if (!formData.value.type) {
       return "Registro Governamental"
    }
-   return customerSelected.value.type === 1 ? "CPF" : "CNPJ"
+   return formData.value.type === 1 ? "CPF" : "CNPJ"
 })
 
 const govIdentifierLabel = computed(() => {
-   if (!customerSelected.value.type) {
+   if (!formData.value.type) {
       return "Documento Identificador"
    }
-   return customerSelected.value.type === 1 ? "RG" : "Inscrição Estadual"
+   return formData.value.type === 1 ? "RG" : "Inscrição Estadual"
 })
 
 const title = computed(() => {
@@ -330,13 +369,95 @@ const cancel = () => {
    )
 }
 
+onMounted(() => {
+   if (customerSelected.value) {
+      formData.value = {
+         id: customerSelected.value.id,
+         name: customerSelected.value.name,
+         type: customerSelected.value.type,
+         email: customerSelected.value.email,
+         cellphone: customerSelected.value.cellphone,
+         phone: customerSelected.value.phone,
+         govDocument: customerSelected.value.govDocument,
+         govIdentifier: customerSelected.value.govIdentifier,
+         address: customerSelected.value.address ?? {
+            id: null,
+            cep: "",
+            uf: "",
+            city: "",
+            street: "",
+            district: "",
+            unit: "",
+         },
+      }
+   }
+})
+
+const validateDuplicateCustomer = async (
+   fieldValue: string | null,
+   messages: Ref<string[]>,
+   error: Ref<boolean>,
+   fetchFn: (value: string) => Promise<Customer>,
+   fieldName: string
+) => {
+   messages.value = []
+   error.value = false
+   if (!fieldValue) return
+
+   try {
+      customerSelectedLoading.value = true
+      const customer = await fetchFn(fieldValue)
+
+      if (customer && customer.id !== formData.value.id) {
+         messages.value = [DUPLICATE_CUSTOMER_ERROR_MESSAGE]
+         error.value = true
+      }
+   } catch (err) {
+      console.error(`Error fetching customer by ${fieldName}:`, err)
+      messages.value = []
+      error.value = false
+   } finally {
+      customerSelectedLoading.value = false
+   }
+}
+
+const handleNameBlur = async () => {
+   await validateDuplicateCustomer(
+      formData.value.name,
+      nameMessages,
+      nameError,
+      (value) => window.management.getCustomerByName(value),
+      "name"
+   )
+}
+
+const handleGovDocumentBlur = async () => {
+   await validateDuplicateCustomer(
+      formData.value.govDocument,
+      govDocumentMessages,
+      govDocumentError,
+      (value) => window.management.getCustomerByGovDocument(value),
+      "govDocument"
+   )
+}
+
+const handleGovIdentifierBlur = async () => {
+   await validateDuplicateCustomer(
+      formData.value.govIdentifier,
+      govIdentifierMessages,
+      govIdentifierError,
+      (value) => window.management.getCustomerByGovIdentifier(value),
+      "govIdentifier"
+   )
+}
+
 const confirm = async () => {
    if (!formCustomerValid.value) {
       return
    }
 
    await confirmOperation(
-      customerSelected,
+      formData,
       customerSelectedLoading,
       customerSelectedAction
    )

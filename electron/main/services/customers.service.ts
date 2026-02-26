@@ -2,28 +2,37 @@ import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import { getDatabaseConnection } from "../database/database"
 import { Customer } from "../entities/customer"
 import * as schema from "../database/schema"
-import { and, eq, like, SQL } from "drizzle-orm"
+import { and, like, SQL } from "drizzle-orm"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
+import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
+import { CustomersRepository } from "../database/repositories/customers.repository"
 
 class CustomersService {
    private readonly _database: BetterSQLite3Database<typeof schema>
+   private readonly _customersRepository: CustomersRepository
 
    public constructor() {
       this._database = getDatabaseConnection()
+      this._customersRepository = new CustomersRepository()
    }
 
    async getById(id: number): Promise<Customer> {
-      const customer = (await this._database.query.customers.findFirst({
-         where: eq(schema.customers.id, id),
-      })) as Customer
+      return await this._customersRepository.getByIdAsync(id)
+   }
 
-      const address = await this._database.query.addresses.findFirst({
-         where: eq(schema.addresses.id, customer.addressId),
-      })
+   async getByName(name: string): Promise<Customer> {
+      return await this._customersRepository.getByNameAsync(name)
+   }
 
-      customer.address = address
-      return customer
+   async getByGovIdentifier(govIdentifier: string): Promise<Customer> {
+      return await this._customersRepository.getByGovIdentifierAsync(
+         govIdentifier
+      )
+   }
+
+   async getByGovDocument(govDocument: string): Promise<Customer> {
+      return await this._customersRepository.getByGovDocumentAsync(govDocument)
    }
 
    async getPaginated(
@@ -58,6 +67,7 @@ class CustomersService {
 
       const items = (await this._database
          .select({
+            id: schema.customers.id,
             name: schema.customers.name,
             type: schema.customers.type,
             govIdentifier: schema.customers.govIdentifier,
@@ -75,57 +85,52 @@ class CustomersService {
    }
 
    async insert(createCustomerDto: CreateCustomerDto): Promise<number> {
-      const customerId = await this._database.transaction(
-         async (transaction) => {
-            let addressId = null
-            if (createCustomerDto.address) {
-               if (createCustomerDto.address.id) {
-                  addressId = createCustomerDto.address.id
-               } else {
-                  const addressResult = await transaction
-                     .insert(schema.addresses)
-                     .values(createCustomerDto.address)
-                     .returning({ id: schema.addresses.id })
-                  addressId = addressResult[0].id
-               }
-            }
-
-            const customerResult = await this._database
-               .insert(schema.customers)
-               .values({ ...createCustomerDto, addressId })
-               .returning({ id: schema.customers.id })
-            return customerResult[0].id
+      return this._database.transaction((transaction) => {
+         let addressId = null
+         if (createCustomerDto.address.cep) {
+            const addressResult = transaction
+               .insert(schema.addresses)
+               .values(createCustomerDto.address)
+               .returning({ id: schema.addresses.id })
+               .run()
+            addressId = addressResult.lastInsertRowid
          }
-      )
-      return customerId
-   }
 
-   async update(customer: Customer): Promise<void> {
-      await this._database.transaction(async (transaction) => {
-         await transaction
-            .update(schema.addresses)
-            .set(customer.address)
-            .where(eq(schema.addresses.id, customer.addressId))
+         const customerResult = transaction
+            .insert(schema.customers)
+            .values({ ...createCustomerDto, addressId })
+            .returning({ id: schema.customers.id, name: schema.customers.name })
+            .run()
 
-         await transaction
-            .update(schema.customers)
-            .set(customer)
-            .where(eq(schema.customers.id, customer.id))
+         return customerResult.lastInsertRowid as number
       })
    }
 
+   async update(
+      id: number,
+      updateCustomerDto: UpdateCustomerDto
+   ): Promise<void> {
+      const customer = await this.getById(id)
+      const previousAddressId = customer.addressId
+
+      customer.updateInformations(
+         updateCustomerDto.type,
+         updateCustomerDto.name,
+         updateCustomerDto.govIdentifier,
+         updateCustomerDto.govDocument,
+         updateCustomerDto.cellphone,
+         updateCustomerDto.phone,
+         updateCustomerDto.email
+      )
+      customer.updateAddress(updateCustomerDto.address)
+
+      this._customersRepository.save(customer, previousAddressId)
+   }
+
    async delete(id: number): Promise<void> {
-      await this._database.transaction(async (transaction) => {
-         const deleteResult = await transaction
-            .delete(schema.customers)
-            .where(eq(schema.customers.id, id))
-            .returning({ addressId: schema.customers.addressId })
-
-         const addressId = deleteResult[0].addressId
-
-         await transaction
-            .delete(schema.addresses)
-            .where(eq(schema.addresses.id, addressId))
+      const customer = await this.getById(id)
+      this._database.transaction((transaction) => {
+         this._customersRepository.delete(customer, transaction)
       })
    }
 }

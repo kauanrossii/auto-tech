@@ -1,6 +1,5 @@
 export interface CreateCustomerAddressDto {
-   id: number | null
-   cep: string
+   cep: string | null
    uf: string | null
    city: string | null
    district: string | null

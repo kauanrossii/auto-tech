@@ -127,8 +127,7 @@ export function useCustomerComposable() {
                cellphone: item.value.cellphone,
                phone: item.value.phone,
                address: {
-                  id: item.value.address?.id ?? null,
-                  cep: item.value.address?.cep!,
+                  cep: item.value.address?.cep ?? null,
                   uf: item.value.address?.uf ?? null,
                   city: item.value.address?.city ?? null,
                   district: item.value.address?.district ?? null,
@@ -138,7 +137,25 @@ export function useCustomerComposable() {
             }
             await window.management.createCustomer(customerDto)
          } else if (action.value === ActionForm.UPDATE) {
-            await window.management.updateCustomer(item.value as Customer)
+            await window.management.updateCustomer(item.value.id!, {
+               id: item.value.id!,
+               name: item.value.name,
+               type: item.value.type!,
+               email: item.value.email,
+               govDocument: item.value.govDocument,
+               govIdentifier: item.value.govIdentifier,
+               cellphone: item.value.cellphone,
+               phone: item.value.phone,
+               address: {
+                  id: item.value.address!.id ?? null,
+                  cep: item.value.address?.cep ?? null,
+                  uf: item.value.address?.uf ?? null,
+                  city: item.value.address?.city ?? null,
+                  district: item.value.address?.district ?? null,
+                  street: item.value.address?.street ?? null,
+                  unit: item.value.address?.unit ?? null,
+               },
+            })
          } else if (action.value === ActionForm.DELETE) {
             await window.management.deleteCustomer(item.value.id!)
          }

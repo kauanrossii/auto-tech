@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import { app, BrowserWindow, shell, ipcMain, ipcRenderer } from "electron"
 import { fileURLToPath } from "node:url"
 import path from "node:path"

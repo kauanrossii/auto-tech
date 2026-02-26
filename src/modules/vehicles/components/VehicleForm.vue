@@ -218,7 +218,7 @@ const handlePlateBlur = async () => {
          vehicleSelected.value.plate
       )
 
-      if (vehicle) {
+      if (vehicle && vehicle.id !== vehicleSelected.value.id) {
          plateMessages.value = [
             `Já existe outro veículo cadastrado com esta placa`,
          ]

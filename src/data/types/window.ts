@@ -5,6 +5,7 @@ import { Customer } from "../../../electron/main/entities/customer"
 import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
+import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 
 declare global {
    interface Window {
@@ -21,8 +22,16 @@ declare global {
             searchCustomersDto: SearchCustomersDto
          ) => Promise<PaginatedResultDto<Customer>>
          getCustomerById: (id: number) => Promise<Customer>
+         getCustomerByName: (name: string) => Promise<Customer>
+         getCustomerByGovIdentifier: (
+            govIdentifier: string
+         ) => Promise<Customer>
+         getCustomerByGovDocument: (govDocument: string) => Promise<Customer>
          createCustomer: (customer: CreateCustomerDto) => Promise<number>
-         updateCustomer: (customer: Customer) => Promise<void>
+         updateCustomer: (
+            id: number,
+            customer: UpdateCustomerDto
+         ) => Promise<void>
          deleteCustomer: (id: number) => Promise<void>
          abc: () => Promise<string>
       }

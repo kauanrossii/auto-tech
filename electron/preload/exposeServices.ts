@@ -3,6 +3,7 @@ import { SearchVehiclesDto } from "@shared/interfaces/vehicles/search-vehicles.d
 import { SearchCustomersDto } from "@shared/interfaces/customers/search-customers.dto"
 import { Vehicle } from "electron/main/entities/vehicle"
 import { Customer } from "electron/main/entities/customer"
+import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 
 export function exposeServicesInMainWorld(
    contextBridge: Electron.ContextBridge,
@@ -19,14 +20,21 @@ export function exposeServicesInMainWorld(
       getVehicleById: (id: number) => ipcRenderer.invoke("getVehicleById", id),
       getVehicleByPlate: (plate: string) =>
          ipcRenderer.invoke("getVehicleByPlate", plate),
+
       listCustomers: (searchCustomersDto: SearchCustomersDto) =>
          ipcRenderer.invoke("listCustomers", searchCustomersDto),
       createCustomer: (customer: Customer) =>
          ipcRenderer.invoke("createCustomer", customer),
-      updateCustomer: (customer: Customer) =>
-         ipcRenderer.invoke("updateCustomer", customer),
+      updateCustomer: (id: number, customer: UpdateCustomerDto) =>
+         ipcRenderer.invoke("updateCustomer", id, customer),
       deleteCustomer: (id: number) => ipcRenderer.invoke("deleteCustomer", id),
       getCustomerById: (id: number) =>
          ipcRenderer.invoke("getCustomerById", id),
+      getCustomerByName: (name: string) =>
+         ipcRenderer.invoke("getCustomerByName", name),
+      getCustomerByGovIdentifier: (govIdentifier: string) =>
+         ipcRenderer.invoke("getCustomerByGovIdentifier", govIdentifier),
+      getCustomerByGovDocument: (govDocument: string) =>
+         ipcRenderer.invoke("getCustomerByGovDocument", govDocument),
    })
 }

@@ -43,7 +43,6 @@ import BaseTable from "../../../components/BaseTable.vue"
 import CustomerForm from "../components/CustomerForm.vue"
 import { useCustomer } from "../providers/customerProvider"
 import { useCustomerComposable } from "../composables/customersComposable"
-import { PersonType } from "../models/constants/CustomerType"
 
 const {
    customerList,

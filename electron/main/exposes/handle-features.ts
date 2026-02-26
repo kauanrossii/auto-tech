@@ -6,6 +6,7 @@ import { Vehicle } from "../entities/vehicle"
 import customersService from "../services/customers.service"
 import vehiclesService from "../services/vehicles.service"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
+import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 
 export function handleFeatures(ipcMain: Electron.IpcMain) {
    //#region Vehicles
@@ -60,6 +61,24 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
       return await customersService.getById(id)
    })
 
+   ipcMain.handle("getCustomerByName", async (event, name: string) => {
+      return await customersService.getByName(name)
+   })
+
+   ipcMain.handle(
+      "getCustomerByGovIdentifier",
+      async (event, govIdentifier: string) => {
+         return await customersService.getByGovIdentifier(govIdentifier)
+      }
+   )
+
+   ipcMain.handle(
+      "getCustomerByGovDocument",
+      async (event, govDocument: string) => {
+         return await customersService.getByGovDocument(govDocument)
+      }
+   )
+
    ipcMain.handle(
       "createCustomer",
       async (event, createCustomerDto: CreateCustomerDto) => {
@@ -67,9 +86,12 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
       }
    )
 
-   ipcMain.handle("updateCustomer", async (event, customer: Customer) => {
-      return await customersService.update(customer)
-   })
+   ipcMain.handle(
+      "updateCustomer",
+      async (event, id: number, customer: UpdateCustomerDto) => {
+         return await customersService.update(id, customer)
+      }
+   )
 
    ipcMain.handle("deleteCustomer", async (event, id: number) => {
       return await customersService.delete(id)
