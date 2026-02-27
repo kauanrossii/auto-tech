@@ -33,16 +33,16 @@
    </v-sheet>
 
    <v-dialog v-model="customerSelectedManipulating" max-width="900px">
-      <CustomerForm />
+      <CustomerModal />
    </v-dialog>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue"
 import BaseTable from "../../../components/BaseTable.vue"
-import CustomerForm from "../components/CustomerForm.vue"
 import { useCustomer } from "../providers/customerProvider"
 import { useCustomerComposable } from "../composables/customersComposable"
+import CustomerModal from "../components/CustomerModal.vue"
 
 const {
    customerList,

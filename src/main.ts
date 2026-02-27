@@ -6,13 +6,17 @@ import { createVuetify } from "vuetify"
 import { pt } from "vuetify/locale"
 import * as components from "vuetify/components"
 import * as directives from "vuetify/directives"
+import * as labsComponents from "vuetify/labs/components"
 import { aliases, mdi } from "vuetify/iconsets/mdi"
 import App from "./App.vue"
 
 import router from "./router/router"
 
 const vuetify = createVuetify({
-   components,
+   components: {
+      ...components,
+      ...labsComponents,
+   },
    directives,
    locale: {
       locale: "pt",

@@ -1,6 +1,6 @@
 import { Expose, Type } from "class-transformer"
 import { Address } from "./address"
-import { Person } from "./person.enum"
+import { Person } from "@shared/enums/person"
 
 export class Customer {
    @Expose()

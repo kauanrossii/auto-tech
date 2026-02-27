@@ -5,6 +5,8 @@ import ListCustomersView from "../modules/customers/views/ListCustomersView.vue"
 import ConfigurationsView from "../views/ConfigurationsView.vue"
 import ListOrdersServiceView from "../modules/orders-service/views/ListOrdersServiceView.vue"
 import ListVehiclesView from "../modules/vehicles/views/ListVehiclesView.vue"
+import CreateOrderServiceView from "@src/modules/orders-service/views/CreateOrderServiceView.vue"
+import { RoutesNames } from "./routes-names"
 
 const router = createRouter({
    routes: [
@@ -13,21 +15,35 @@ const router = createRouter({
          component: DefaultLayout,
          redirect: "home",
          children: [
-            { path: "home", name: "home", component: HomeView },
+            { path: "home", name: RoutesNames.home, component: HomeView },
             {
                path: "customers",
-               name: "customers",
+               name: RoutesNames.customersList,
                component: ListCustomersView,
             },
-            { path: "vehicles", name: "vehicles", component: ListVehiclesView },
             {
-               path: "orders-service",
-               name: "orders-service",
-               component: ListOrdersServiceView,
+               path: "vehicles",
+               name: RoutesNames.vehiclesList,
+               component: ListVehiclesView,
+            },
+            {
+               path: "orders-of-service",
+               children: [
+                  {
+                     path: "",
+                     name: RoutesNames.ordersOfServiceList,
+                     component: ListOrdersServiceView,
+                  },
+                  {
+                     path: "create",
+                     name: RoutesNames.ordersOfServiceCreate,
+                     component: CreateOrderServiceView,
+                  },
+               ],
             },
             {
                path: "configurations",
-               name: "configurations",
+               name: RoutesNames.configurations,
                component: ConfigurationsView,
             },
          ],
