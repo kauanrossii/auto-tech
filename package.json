@@ -36,7 +36,7 @@
     "@types/better-sqlite3": "^7.6.11",
     "@vitejs/plugin-vue": "^6.0.1",
     "drizzle-kit": "^0.31.5",
-    "electron": "^37.1.0",
+    "electron": "^40.6.1",
     "electron-builder": "^26.0.12",
     "sass": "^1.79.4",
     "sass-loader": "^16.0.2",
