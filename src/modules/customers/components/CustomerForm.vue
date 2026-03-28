@@ -94,8 +94,10 @@
                   hide-details
                   id="cep-input"
                   density="compact"
+                  mask="#####-####"
                   placeholder="00000-000"
                   :disabled="isDeletingCustomer"
+                  :loading="cepLookupLoading"
                >
                </v-mask-input>
             </div>
@@ -110,7 +112,7 @@
                   density="compact"
                   v-model="formData.address!.uf"
                   :items="stateItems"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isDeletingCustomer || cepLookupLoading"
                ></v-autocomplete>
             </div>
          </v-col>
@@ -123,7 +125,7 @@
                   id="city-input"
                   density="compact"
                   v-model="formData.address!.city"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isDeletingCustomer || cepLookupLoading"
                >
                </v-text-field>
             </div>
@@ -181,7 +183,7 @@
                   id="street-input"
                   density="compact"
                   v-model="formData.address!.street"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isDeletingCustomer || cepLookupLoading"
                >
                </v-text-field>
             </div>
@@ -195,7 +197,7 @@
                   id="district-input"
                   density="compact"
                   v-model="formData.address!.district"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isDeletingCustomer || cepLookupLoading"
                >
                </v-text-field>
             </div>
@@ -223,7 +225,8 @@ import { injectStrict } from "../../../utils/injectionUtils"
 import { CustomerKeys } from "../providers/customerKeys"
 import { CustomerRules } from "../rules/customer-rules"
 import { PersonType } from "../models/constants/CustomerType"
-import { computed, ref, type Ref, onMounted } from "vue"
+import { computed, ref, type Ref, onMounted, watch } from "vue"
+import { useViaCepAddress } from "@src/modules/address/composables/useViaCepAddress"
 import { ActionForm } from "@src/data/enums/ActionForm"
 import { Customer } from "electron/main/entities/customer"
 import { CustomerForm } from "../types/customer-form"
@@ -294,6 +297,16 @@ const DUPLICATE_CUSTOMER_ERROR_MESSAGE =
    "Esse cliente já foi cadastrado anteriormente no sistema"
 
 const PersonTypeItems = PersonType
+
+const cepLookupLoading = ref(false)
+const { onCepFieldChanged } = useViaCepAddress()
+
+watch(
+   () => formData.value.address?.cep,
+   (raw) => {
+      onCepFieldChanged(raw ?? "", formData.value.address, cepLookupLoading)
+   }
+)
 
 const stateItems = [
    "Acre",

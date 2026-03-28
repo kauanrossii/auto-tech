@@ -1,11 +1,25 @@
 <template>
-   <v-sheet
-      :style="{ width: '97%' }"
-      class="h-100 d-flex flex-column justify-center"
-   >
-      <v-toolbar title="Cadastrar Ordem de Serviço" class="bg-blue-darken-3">
-      </v-toolbar>
-      <v-stepper editable>
+   <v-sheet :style="{ width: '97%' }" class="h-100 d-flex flex-column">
+      <v-sheet flat class="pa-6 pb-4 flex-shrink-0">
+         <div class="d-flex align-start align-sm-center ga-3 flex-wrap">
+            <v-btn
+               icon="mdi-arrow-left"
+               variant="text"
+               density="comfortable"
+               aria-label="Voltar para a lista"
+               @click="goToOrdersList"
+            />
+            <div class="flex-grow-1" style="min-width: 200px">
+               <h1 class="text-h5 font-weight-medium">Nova ordem de serviço</h1>
+               <p class="text-body-2 text-medium-emphasis mb-0 mt-2">
+                  Preencha as etapas abaixo para registrar cliente, veículo,
+                  serviços e peças.
+               </p>
+            </div>
+         </div>
+      </v-sheet>
+      <v-divider class="flex-shrink-0" />
+      <v-stepper editable class="flex-grow-1 rounded-0 elevation-0">
          <template #default="{ prev, next }">
             <v-stepper-header class="rounded-0 bg-white">
                <v-stepper-item
@@ -95,14 +109,22 @@ import { useCustomer } from "@src/modules/customers/providers/customerProvider"
 import VehicleForm2 from "@src/modules/vehicles/components/VehicleForm2.vue"
 import { useVehicle } from "@src/modules/vehicles/providers/vehicleProvider"
 import { onMounted, ref } from "vue"
+import { useRouter } from "vue-router"
+import { RoutesNames } from "@src/router/routes-names"
 import ServicesForm from "../components/ServicesForm.vue"
 import PartsForm from "../components/PartsForm.vue"
+
+const router = useRouter()
 
 const hour = ref("")
 const date = ref("")
 
 useCustomer()
 useVehicle()
+
+function goToOrdersList() {
+   router.push({ name: RoutesNames.ordersOfServiceList })
+}
 
 onMounted(() => {
    const now = new Date()

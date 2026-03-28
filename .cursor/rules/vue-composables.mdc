@@ -1,0 +1,14 @@
+---
+description: Composables Vue — factory use() sem parâmetros; dados nos métodos retornados
+alwaysApply: true
+---
+
+# Composables Vue (`use…`)
+
+- A função principal **`useNomeDoDominio()` não recebe argumentos** (sem `Ref`, DTOs ou callbacks na assinatura da factory).
+- **Estado reativo de UI** (ex.: `loading`, flags de erro exibidas no template) deve ser declarado **no componente** (ou no chamador) e **repassado como parâmetro** nos métodos retornados pelo composable quando a operação precisar atualizá-lo — o composable não mantém `ref` só para isso.
+- Outras dependências de dados do chamador entram nos **métodos retornados**, cada um com os parâmetros necessários para aquela operação (ex.: `onCepFieldChanged(rawCep, address, loading)`).
+- O componente reage com `watch` / handlers e **chama** esses métodos passando valores e refs atuais.
+- É aceitável manter **dentro** do composable apenas estado de coordenação que não pertence ao chamador (debounce, deduplicação de requisição, etc.) e usar `inject`, `onUnmounted` para cleanup, desde que a factory continue sem parâmetros.
+
+Ao criar novos composables neste projeto, siga este padrão.
