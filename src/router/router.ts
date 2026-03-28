@@ -8,6 +8,7 @@ import ListVehiclesView from "../modules/vehicles/views/ListVehiclesView.vue"
 import CreateOrderServiceView from "@src/modules/orders-service/views/CreateOrderServiceView.vue"
 import { RoutesNames } from "./routes-names"
 import DetailsOrderServiceView from "@src/modules/orders-service/views/DetailsOrderServiceView.vue"
+import DetailsVehicleView from "@src/modules/vehicles/views/DetailsVehicleView.vue"
 
 const router = createRouter({
    routes: [
@@ -24,8 +25,18 @@ const router = createRouter({
             },
             {
                path: "vehicles",
-               name: RoutesNames.vehiclesList,
-               component: ListVehiclesView,
+               children: [
+                  {
+                     path: "",
+                     name: RoutesNames.vehiclesList,
+                     component: ListVehiclesView,
+                  },
+                  {
+                     path: ":id",
+                     name: RoutesNames.vehiclesDetails,
+                     component: DetailsVehicleView,
+                  },
+               ],
             },
             {
                path: "orders-of-service",

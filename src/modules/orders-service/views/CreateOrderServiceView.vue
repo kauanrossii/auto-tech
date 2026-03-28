@@ -66,7 +66,7 @@
                            </v-col>
                         </v-row>
                      </v-form>
-                     <VehicleForm2 />
+                     <VehicleForm />
                      <v-divider class="my-10"></v-divider>
                      <CustomerForm />
                   </v-sheet>
@@ -106,7 +106,7 @@
 <script setup lang="ts">
 import CustomerForm from "@src/modules/customers/components/CustomerForm.vue"
 import { useCustomer } from "@src/modules/customers/providers/customerProvider"
-import VehicleForm2 from "@src/modules/vehicles/components/VehicleForm2.vue"
+import VehicleForm from "@src/modules/vehicles/components/VehicleForm.vue"
 import { useVehicle } from "@src/modules/vehicles/providers/vehicleProvider"
 import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
