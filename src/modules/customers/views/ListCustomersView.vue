@@ -17,7 +17,7 @@
       >
          <template #top>
             <v-toolbar flat class="bg-white">
-               <v-toolbar-title>Clientes cadastrados</v-toolbar-title>
+               <v-toolbar-title>Clientes</v-toolbar-title>
 
                <v-btn
                   class="me-2"

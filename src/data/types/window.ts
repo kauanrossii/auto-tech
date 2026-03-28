@@ -6,6 +6,8 @@ import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
+import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/search-orders-of-service.dto"
+import { OrderOfServiceListItemDto } from "@shared/interfaces/orders-of-service/order-of-service-list-item.dto"
 
 declare global {
    interface Window {
@@ -33,6 +35,10 @@ declare global {
             customer: UpdateCustomerDto
          ) => Promise<void>
          deleteCustomer: (id: number) => Promise<void>
+         listOrdersOfService: (
+            dto: SearchOrdersOfServiceDto
+         ) => Promise<PaginatedResultDto<OrderOfServiceListItemDto>>
+         deleteOrderOfService: (id: number) => Promise<void>
          abc: () => Promise<string>
       }
    }

@@ -58,10 +58,10 @@
                   </v-sheet>
                </v-stepper-window-item>
                <v-stepper-window-item :value="2">
-                  <v-sheet class="pa-4"> </v-sheet>
+                  <ServicesForm />
                </v-stepper-window-item>
                <v-stepper-window-item :value="3">
-                  <!-- Conteúdo para a etapa de Serviços -->
+                  <PartsForm />
                </v-stepper-window-item>
             </v-stepper-window>
             <v-stepper-actions>
@@ -95,6 +95,8 @@ import { useCustomer } from "@src/modules/customers/providers/customerProvider"
 import VehicleForm2 from "@src/modules/vehicles/components/VehicleForm2.vue"
 import { useVehicle } from "@src/modules/vehicles/providers/vehicleProvider"
 import { onMounted, ref } from "vue"
+import ServicesForm from "../components/ServicesForm.vue"
+import PartsForm from "../components/PartsForm.vue"
 
 const hour = ref("")
 const date = ref("")

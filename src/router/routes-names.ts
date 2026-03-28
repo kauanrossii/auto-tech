@@ -3,6 +3,7 @@ export const RoutesNames = {
    customersList: "list-customers",
    vehiclesList: "list-vehicles",
    ordersOfServiceList: "list-orders-of-service",
+   ordersOfServiceDetails: "details-orders-of-service",
    ordersOfServiceCreate: "create-orders-of-service",
    configurations: "configurations",
 }

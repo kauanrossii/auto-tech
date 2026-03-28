@@ -96,7 +96,7 @@ export const orderOfServiceRelations = relations(
       parts: many(parts),
       services: many(services),
       vehicle: one(vehicles, {
-         fields: [ordersOfService.id],
+         fields: [ordersOfService.vehicleId],
          references: [vehicles.id],
       }),
       customer: one(customers, {

@@ -1,10 +1,11 @@
 import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
 import { SearchCustomersDto } from "@shared/interfaces/customers/search-customers.dto"
 import { SearchVehiclesDto } from "@shared/interfaces/vehicles/search-vehicles.dto"
-import { Customer } from "../entities/customer"
 import { Vehicle } from "../entities/vehicle"
 import customersService from "../services/customers.service"
 import vehiclesService from "../services/vehicles.service"
+import ordersOfServiceService from "../services/orders-of-service.service"
+import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/search-orders-of-service.dto"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 
@@ -42,6 +43,26 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
 
    ipcMain.handle("deleteVehicle", async (event, id: number) => {
       return await vehiclesService.deleteAsync(id)
+   })
+   //#endregion
+
+   //#region Orders of service
+   ipcMain.handle(
+      "listOrdersOfService",
+      async (event, dto: SearchOrdersOfServiceDto) => {
+         return await ordersOfServiceService.getPaginatedAsync(
+            dto.pagination.page,
+            dto.pagination.quantity,
+            {
+               customerName: dto.filters.customerName ?? undefined,
+               vehicleName: dto.filters.vehicleName ?? undefined,
+            }
+         )
+      }
+   )
+
+   ipcMain.handle("deleteOrderOfService", async (event, id: number) => {
+      await ordersOfServiceService.delete(id)
    })
    //#endregion
 

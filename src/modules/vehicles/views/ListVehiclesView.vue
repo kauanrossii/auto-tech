@@ -17,7 +17,7 @@
       >
          <template #top>
             <v-toolbar flat class="bg-white">
-               <v-toolbar-title>Veículos cadastrados</v-toolbar-title>
+               <v-toolbar-title>Veículos</v-toolbar-title>
 
                <v-btn
                   class="me-2"

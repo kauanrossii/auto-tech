@@ -4,6 +4,7 @@ import { SearchCustomersDto } from "@shared/interfaces/customers/search-customer
 import { Vehicle } from "electron/main/entities/vehicle"
 import { Customer } from "electron/main/entities/customer"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
+import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/search-orders-of-service.dto"
 
 export function exposeServicesInMainWorld(
    contextBridge: Electron.ContextBridge,
@@ -36,5 +37,10 @@ export function exposeServicesInMainWorld(
          ipcRenderer.invoke("getCustomerByGovIdentifier", govIdentifier),
       getCustomerByGovDocument: (govDocument: string) =>
          ipcRenderer.invoke("getCustomerByGovDocument", govDocument),
+
+      listOrdersOfService: (dto: SearchOrdersOfServiceDto) =>
+         ipcRenderer.invoke("listOrdersOfService", dto),
+      deleteOrderOfService: (id: number) =>
+         ipcRenderer.invoke("deleteOrderOfService", id),
    })
 }
