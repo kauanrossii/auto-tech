@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { onMounted, onUnmounted } from "vue"
 import { useRouter } from "vue-router"
 import BaseTable from "../../../components/BaseTable.vue"
 import { RoutesNames } from "@src/router/routes-names"
@@ -50,8 +50,11 @@ const {
    orderListLoading,
 } = useOrderOfService()
 
-const { fetchOrdersOfService, deleteOrderOfService } =
-   useOrderOfServiceComposable()
+const {
+   fetchOrdersOfService,
+   deleteOrderOfService,
+   invalidatePendingOrderListFetch,
+} = useOrderOfServiceComposable()
 
 const headers = [
    { title: "Número", key: "id", width: "90px" },
@@ -108,12 +111,16 @@ const updateOptions = async (page: number, itemsPerPage: number) => {
    )
 }
 
-onMounted(async () => {
-   await fetchOrdersOfService(
+onMounted(() => {
+   void fetchOrdersOfService(
       orderList,
       orderListFilters,
       orderListPagination,
       orderListLoading
    )
+})
+
+onUnmounted(() => {
+   invalidatePendingOrderListFetch()
 })
 </script>
