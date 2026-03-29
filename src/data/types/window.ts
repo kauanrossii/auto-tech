@@ -1,8 +1,15 @@
 import { SearchVehiclesDto } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { SearchCustomersDto } from "@shared/interfaces/customers/search-customers.dto"
-import { Vehicle } from "../../../electron/main/entities/vehicle"
+import {
+   CreateVehicleDto,
+   CreateVehicleResultDto,
+} from "@shared/interfaces/vehicles/create-vehicle.dto"
+import { UpdateVehicleDto } from "@shared/interfaces/vehicles/update-vehicle.dto"
+import {
+   VehicleDto,
+   VehicleListItemDto,
+} from "@shared/interfaces/vehicles/vehicle.dto"
 import { Customer } from "../../../electron/main/entities/customer"
-import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
@@ -14,11 +21,13 @@ declare global {
       management: {
          listVehicles: (
             searchVehiclesDto: SearchVehiclesDto
-         ) => Promise<PaginatedResultDto<Vehicle>>
-         getVehicleById: (id: number) => Promise<Vehicle>
-         getVehicleByPlate: (plate: string) => Promise<Vehicle>
-         createVehicle: (createVehicleDto: CreateVehicleDto) => Promise<Vehicle>
-         updateVehicle: (vehicle: Vehicle) => Promise<Vehicle>
+         ) => Promise<PaginatedResultDto<VehicleListItemDto>>
+         getVehicleById: (id: number) => Promise<VehicleDto | undefined>
+         getVehicleByPlate: (plate: string) => Promise<VehicleDto | undefined>
+         createVehicle: (
+            createVehicleDto: CreateVehicleDto
+         ) => Promise<CreateVehicleResultDto>
+         updateVehicle: (dto: UpdateVehicleDto) => Promise<void>
          deleteVehicle: (id: number) => Promise<void>
          listCustomers: (
             searchCustomersDto: SearchCustomersDto

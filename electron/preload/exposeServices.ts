@@ -1,7 +1,7 @@
 import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
 import { SearchVehiclesDto } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { SearchCustomersDto } from "@shared/interfaces/customers/search-customers.dto"
-import { Vehicle } from "electron/main/entities/vehicle"
+import { UpdateVehicleDto } from "@shared/interfaces/vehicles/update-vehicle.dto"
 import { Customer } from "electron/main/entities/customer"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/search-orders-of-service.dto"
@@ -15,8 +15,8 @@ export function exposeServicesInMainWorld(
          ipcRenderer.invoke("listVehicles", searchVehiclesDto),
       createVehicle: (createVehicleDto: CreateVehicleDto) =>
          ipcRenderer.invoke("createVehicle", createVehicleDto),
-      updateVehicle: (vehicle: Vehicle) =>
-         ipcRenderer.invoke("updateVehicle", vehicle),
+      updateVehicle: (dto: UpdateVehicleDto) =>
+         ipcRenderer.invoke("updateVehicle", dto),
       deleteVehicle: (id: number) => ipcRenderer.invoke("deleteVehicle", id),
       getVehicleById: (id: number) => ipcRenderer.invoke("getVehicleById", id),
       getVehicleByPlate: (plate: string) =>

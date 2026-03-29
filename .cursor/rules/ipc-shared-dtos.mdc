@@ -1,0 +1,17 @@
+---
+description: IPC renderer ↔ main — contratos em shared, sem importar electron no frontend
+alwaysApply: true
+---
+
+# IPC e contratos (`shared/`)
+
+- O **renderer (Vue em `src/`) não deve importar** módulos de `electron/` (entidades da main, serviços internos, etc.). Isso evita dependência circular, quebra de build web e tipos incompatíveis com o bundler.
+- Toda **carga útil** de canais IPC (`ipcMain.handle` / `preload` / `window.management`) deve usar **interfaces e DTOs em `shared/interfaces/…`** (e enums em `shared/enums/…` quando fizer sentido).
+- Padrão sugerido:
+  - **Entrada:** `CreateXxxDto`, `UpdateXxxDto`, `SearchXxxDto`, etc.
+  - **Saída:** `XxxDto` (registro completo), `XxxListItemDto` (listagem enxuta), `PaginatedResultDto<T>`, `CreateXxxResultDto` quando o retorno for só id ou metadados.
+- Manter **`src/data/types/window.ts`** alinhado ao preload: mesmos tipos de argumentos e de retorno (`Promise<…>`) que os handlers reais expõem.
+- Na **main**, serviços convertem/mappeiam entre Drizzle/entidades internas e os DTOs de `shared` nas bordas (handlers), não o contrário no renderer.
+- O **preload** tipa as funções expostas com os mesmos DTOs de `shared`, não com classes da pasta `electron/main/entities`.
+
+Ao adicionar ou alterar canais IPC neste projeto, siga este padrão.

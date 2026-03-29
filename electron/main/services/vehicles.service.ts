@@ -2,10 +2,17 @@ import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import { getDatabaseConnection } from "../database/database"
 import { vehicles as vehiclesSchema } from "../database/schema"
 import * as schema from "../database/schema"
-import { Vehicle } from "../entities/vehicle"
 import { and, eq, like, SQL } from "drizzle-orm"
-import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
+import {
+   CreateVehicleDto,
+   CreateVehicleResultDto,
+} from "@shared/interfaces/vehicles/create-vehicle.dto"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
+import { UpdateVehicleDto } from "@shared/interfaces/vehicles/update-vehicle.dto"
+import {
+   VehicleDto,
+   VehicleListItemDto,
+} from "@shared/interfaces/vehicles/vehicle.dto"
 
 class VehiclesService {
    private readonly _database: BetterSQLite3Database<typeof schema>
@@ -14,23 +21,23 @@ class VehiclesService {
       this._database = getDatabaseConnection()
    }
 
-   async getByIdAsync(id: number): Promise<Vehicle> {
-      return await this._database.query.vehicles.findFirst({
+   async getByIdAsync(id: number): Promise<VehicleDto | undefined> {
+      return (await this._database.query.vehicles.findFirst({
          where: eq(vehiclesSchema.id, id),
-      })
+      })) as VehicleDto | undefined
    }
 
-   async getByPlateAsync(plate: string): Promise<Vehicle> {
-      return await this._database.query.vehicles.findFirst({
+   async getByPlateAsync(plate: string): Promise<VehicleDto | undefined> {
+      return (await this._database.query.vehicles.findFirst({
          where: eq(vehiclesSchema.plate, plate),
-      })
+      })) as VehicleDto | undefined
    }
 
    async getPaginatedAsync(
       page: number,
       quantity: number,
       filters?: { model?: string; brand?: string; plate?: string }
-   ): Promise<PaginatedResultDto<Vehicle>> {
+   ): Promise<PaginatedResultDto<VehicleListItemDto>> {
       const where: SQL[] = []
 
       if (filters) {
@@ -61,7 +68,7 @@ class VehiclesService {
          .from(vehiclesSchema)
          .where(and(...where))
          .offset(quantity * (page - 1))
-         .limit(quantity)) as Vehicle[]
+         .limit(quantity)) as VehicleListItemDto[]
 
       return {
          items: vehicles,
@@ -71,7 +78,7 @@ class VehiclesService {
 
    async insertAsync(
       createVehicleDto: CreateVehicleDto
-   ): Promise<{ id: number }> {
+   ): Promise<CreateVehicleResultDto> {
       const samePlateVehicle = await this._database.query.vehicles.findFirst({
          where: eq(vehiclesSchema.plate, createVehicleDto.plate),
       })
@@ -87,11 +94,12 @@ class VehiclesService {
       return insertResult[0]
    }
 
-   async updateAsync(vehicle: Vehicle): Promise<void> {
+   async updateAsync(dto: UpdateVehicleDto): Promise<void> {
+      const { id, ...data } = dto
       await this._database
          .update(vehiclesSchema)
-         .set(vehicle)
-         .where(eq(vehiclesSchema.id, vehicle.id))
+         .set(data)
+         .where(eq(vehiclesSchema.id, id))
    }
 
    async deleteAsync(id: number): Promise<void> {

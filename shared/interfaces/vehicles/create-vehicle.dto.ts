@@ -10,3 +10,7 @@ export interface CreateVehicleDto {
    color: string | null
    chassi: string | null
 }
+
+export interface CreateVehicleResultDto {
+   id: number
+}

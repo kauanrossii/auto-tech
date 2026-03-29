@@ -1,13 +1,13 @@
 import { provide, ref } from "vue"
-import { Vehicle } from "../../../../electron/main/entities/vehicle"
 import { ActionForm } from "../../../data/enums/ActionForm"
 import { VehicleKeys } from "./vehicleKeys"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
 import { SearchVehiclesFilters } from "@shared/interfaces/vehicles/search-vehicles.dto"
+import { VehicleListItemDto } from "@shared/interfaces/vehicles/vehicle.dto"
 import { VehicleForm } from "../types/vehicle-form"
 
 export function useVehicle() {
-   const vehicleList = ref<Vehicle[]>([])
+   const vehicleList = ref<VehicleListItemDto[]>([])
    const vehicleListLoading = ref<boolean>(false)
    const vehicleListPagination = ref<PaginationDto>({
       page: 1,

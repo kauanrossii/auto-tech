@@ -128,7 +128,7 @@ import { useVehicle } from "../providers/vehicleProvider"
 import { useVehicleComposable } from "../composables/vehicleComposable"
 import { RoutesNames } from "@src/router/routes-names"
 import type { VehicleForm as VehicleFormType } from "../types/vehicle-form"
-import { Vehicle } from "electron/main/entities/vehicle"
+import { vehicleFormToUpdateDto } from "../utils/vehicle-form-to-dto"
 
 const route = useRoute()
 const router = useRouter()
@@ -206,11 +206,11 @@ async function cancelEditing() {
 
 async function saveChanges() {
    if (!vehicleFormValid.value || !vehicleSelected.value.id) return
+   const dto = vehicleFormToUpdateDto(vehicleSelected.value)
+   if (!dto) return
    vehicleSelectedLoading.value = true
    try {
-      await window.management.updateVehicle(
-         vehicleSelected.value as unknown as Vehicle
-      )
+      await window.management.updateVehicle(dto)
       isEditing.value = false
    } catch (error) {
       console.error("Error updating vehicle:", error)

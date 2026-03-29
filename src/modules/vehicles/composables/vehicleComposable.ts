@@ -1,14 +1,18 @@
 import { Ref } from "vue"
-import { Vehicle } from "../../../../electron/main/entities/vehicle"
 import { ActionForm } from "../../../data/enums/ActionForm"
 import { SearchVehiclesFilters } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
 import { VehicleForm } from "../types/vehicle-form"
 import { CreateVehicleDto } from "@shared/interfaces/vehicles/create-vehicle.dto"
+import { VehicleListItemDto } from "@shared/interfaces/vehicles/vehicle.dto"
+import {
+   vehicleDtoToForm,
+   vehicleFormToUpdateDto,
+} from "../utils/vehicle-form-to-dto"
 
 export function useVehicleComposable() {
    const fetchVehicles = async (
-      items: Ref<Vehicle[]>,
+      items: Ref<VehicleListItemDto[]>,
       filters: Ref<SearchVehiclesFilters>,
       pagination: Ref<PaginationDto>,
       loading: Ref<boolean>
@@ -92,7 +96,7 @@ export function useVehicleComposable() {
       loading.value = true
       try {
          const response = await window.management.getVehicleById(id)
-         item.value = response
+         if (response) item.value = vehicleDtoToForm(response)
       } catch (error) {
          console.error("Error fetching vehicle by ID:", error)
       } finally {
@@ -108,7 +112,7 @@ export function useVehicleComposable() {
       loading.value = true
       try {
          const response = await window.management.getVehicleByPlate(plate)
-         item.value = response
+         if (response) item.value = vehicleDtoToForm(response)
       } catch (error) {
          console.error("Error fetching vehicle by plate:", error)
       } finally {
@@ -128,7 +132,8 @@ export function useVehicleComposable() {
                ...item.value,
             } as CreateVehicleDto)
          } else if (action.value === ActionForm.UPDATE) {
-            await window.management.updateVehicle({ ...item.value } as Vehicle)
+            const dto = vehicleFormToUpdateDto(item.value)
+            if (dto) await window.management.updateVehicle(dto)
          } else if (action.value === ActionForm.DELETE) {
             await window.management.deleteVehicle(item.value.id!)
          }

@@ -1,12 +1,12 @@
 import { InjectionKey, Ref } from "vue"
-import { Vehicle } from "../../../../electron/main/entities/vehicle"
 import { ActionForm } from "../../../data/enums/ActionForm"
+import { VehicleListItemDto } from "@shared/interfaces/vehicles/vehicle.dto"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
 import { SearchVehiclesFilters } from "@shared/interfaces/vehicles/search-vehicles.dto"
 import { VehicleForm } from "../types/vehicle-form"
 
 export const VehicleKeys: {
-   vehicleList: InjectionKey<Ref<Vehicle[]>>
+   vehicleList: InjectionKey<Ref<VehicleListItemDto[]>>
    vehicleListLoading: InjectionKey<Ref<boolean>>
    vehicleListPagination: InjectionKey<Ref<PaginationDto>>
    vehicleListFilters: InjectionKey<Ref<SearchVehiclesFilters>>

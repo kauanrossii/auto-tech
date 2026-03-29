@@ -34,6 +34,7 @@
     "@electron/rebuild": "^4.0.1",
     "@mdi/font": "^7.4.47",
     "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^25.5.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "drizzle-kit": "^0.31.5",
     "electron": "^37.1.0",
@@ -48,10 +49,12 @@
     "vue-tsc": "^2.0.6"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.2.2",
     "better-sqlite3": "^12.4.1",
     "class-transformer": "^0.5.1",
     "drizzle-orm": "^0.44.2",
     "reflect-metadata": "^0.2.2",
+    "tailwindcss": "^4.2.2",
     "vue-router": "^4.4.5",
     "vuetify": "^3.7.2"
   }
