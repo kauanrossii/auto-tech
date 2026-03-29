@@ -15,21 +15,42 @@
                   Preencha os dados do cliente, veículo, peças e serviços.
                </p>
             </div>
-            <div class="d-flex flex-wrap ga-2 align-center">
-               <v-btn
-                  variant="tonal"
-                  color="primary"
-                  rounded="sm"
-                  text="Cancelar"
-                  @click="goToOrdersList"
-               />
-               <v-btn
-                  color="primary"
-                  variant="elevated"
-                  rounded="sm"
-                  text="Cadastrar"
-                  @click="createOrderOfService"
-               />
+            <div class="d-flex flex-column align-end">
+               <div class="d-flex flex-wrap ga-2 align-center">
+                  <v-btn
+                     variant="tonal"
+                     color="primary"
+                     rounded="sm"
+                     text="Cancelar"
+                     @click="goToOrdersList"
+                  />
+                  <div class="d-flex flex-column align-start">
+                     <v-btn
+                        color="primary"
+                        variant="elevated"
+                        rounded="sm"
+                        text="Cadastrar"
+                        :disabled="!canSubmit"
+                        @click="createOrderOfService"
+                     />
+                  </div>
+               </div>
+               <div
+                  class="d-flex align-center ga-1 text-body-2 text-medium-emphasis mt-1"
+                  style="min-height: 19.948px"
+               >
+                  <v-icon
+                     v-if="!canSubmit"
+                     icon="mdi-alert"
+                     size="small"
+                     color="grey-darken-1"
+                     aria-hidden="true"
+                  />
+                  <span v-if="!canSubmit"
+                     >Não é possível finalizar o cadastro enquanto houver
+                     informações faltantes.</span
+                  >
+               </div>
             </div>
          </div>
       </v-sheet>
@@ -38,7 +59,7 @@
 
       <v-sheet class="px-4 py-4 d-flex flex-column">
          <v-sheet class="w-100 mb-2 d-flex flex-column">
-            <v-row dense class="ma-0" style="max-width: 100%">
+            <v-row class="ma-0" style="max-width: 100%">
                <v-col cols="12" sm="auto" class="pt-0 pb-2">
                   <div class="d-flex flex-column" style="min-width: 88px">
                      <v-label for="order-number-create" class="mb-1"
@@ -49,7 +70,7 @@
                         hide-details
                         density="compact"
                         variant="outlined"
-                        model-value="—"
+                        :model-value="nextOrderOfServiceId ? String(nextOrderOfServiceId) : '—'"
                         disabled
                      />
                   </div>
@@ -90,24 +111,67 @@
          </v-sheet>
 
          <v-tabs v-model="tab" class="mt-2" color="primary">
-            <v-tab value="customer">Cliente</v-tab>
-            <v-tab value="vehicle">Veículo</v-tab>
-            <v-tab value="parts">Peças</v-tab>
-            <v-tab value="services">Serviços</v-tab>
+            <v-tab value="customer">
+               <span class="d-inline-flex align-center ga-1">
+                  <v-icon
+                     v-if="!customerFormValid"
+                     icon="mdi-alert"
+                     size="small"
+                     :color="tab === 'customer' ? 'primary' : 'grey-darken-1'"
+                     aria-hidden="true"
+                  />
+                  Cliente
+               </span>
+            </v-tab>
+            <v-tab value="vehicle">
+               <span class="d-inline-flex align-center ga-1">
+                  <v-icon
+                     v-if="!vehicleFormValid"
+                     icon="mdi-alert"
+                     size="small"
+                     :color="tab === 'vehicle' ? 'primary' : 'grey-darken-1'"
+                     aria-hidden="true"
+                  />
+                  Veículo
+               </span>
+            </v-tab>
+            <v-tab value="parts">
+               <span class="d-inline-flex align-center ga-1">
+                  <v-icon
+                     v-if="!partsFormValid"
+                     icon="mdi-alert"
+                     size="small"
+                     :color="tab === 'parts' ? 'primary' : 'grey-darken-1'"
+                     aria-hidden="true"
+                  />
+                  Peças
+               </span>
+            </v-tab>
+            <v-tab value="services">
+               <span class="d-inline-flex align-center ga-1">
+                  <v-icon
+                     v-if="!servicesFormValid"
+                     icon="mdi-alert"
+                     size="small"
+                     :color="tab === 'services' ? 'primary' : 'grey-darken-1'"
+                     aria-hidden="true"
+                  />
+                  Serviços
+               </span>
+            </v-tab>
          </v-tabs>
 
-         <!-- v-tabs-window (VWindow) limita altura/overflow e corta formulários longos; v-show mantém o fluxo e o scroll fica no AppView -->
          <div v-show="tab === 'customer'" class="py-6">
-            <CustomerForm />
+            <CustomerForm v-model:valid="customerFormValid" />
          </div>
          <div v-show="tab === 'vehicle'" class="py-6">
-            <VehicleForm :readonly="false" />
+            <VehicleForm v-model:valid="vehicleFormValid" :readonly="false" />
          </div>
          <div v-show="tab === 'parts'">
-            <PartsForm :readonly="false" />
+            <PartsForm v-model:valid="partsFormValid" :readonly="false" />
          </div>
          <div v-show="tab === 'services'">
-            <ServicesForm :readonly="false" />
+            <ServicesForm v-model:valid="servicesFormValid" :readonly="false" />
          </div>
       </v-sheet>
    </v-sheet>
@@ -119,7 +183,7 @@ import { useCustomer } from "@src/modules/customers/providers/customerProvider"
 import VehicleForm from "@src/modules/vehicles/components/VehicleForm.vue"
 import { useVehicle } from "@src/modules/vehicles/providers/vehicleProvider"
 import type { VehicleForm as VehicleFormType } from "@src/modules/vehicles/types/vehicle-form"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
 import { RoutesNames } from "@src/router/routes-names"
 import { Customer } from "electron/main/entities/customer"
@@ -134,6 +198,20 @@ const { vehicleSelected } = useVehicle()
 const hour = ref("")
 const date = ref("")
 const tab = ref<"customer" | "vehicle" | "parts" | "services">("customer")
+const customerFormValid = ref(false)
+const vehicleFormValid = ref(false)
+const partsFormValid = ref(true)
+const servicesFormValid = ref(true)
+const nextOrderOfServiceId = ref<number | null>(null)
+
+const canSubmit = computed(() => {
+   return (
+      customerFormValid.value &&
+      vehicleFormValid.value &&
+      partsFormValid.value &&
+      servicesFormValid.value
+   )
+})
 
 const emptyVehicle = (): VehicleFormType => ({
    id: null,
@@ -165,5 +243,14 @@ onMounted(() => {
    })
    vehicleSelected.value = emptyVehicle()
    customerSelected.value = {} as Customer
+   window.management
+      .getNextOrderOfServiceId()
+      .then((id) => {
+         nextOrderOfServiceId.value = id
+      })
+      .catch((error) => {
+         console.error("Error fetching next order of service id:", error)
+         nextOrderOfServiceId.value = null
+      })
 })
 </script>

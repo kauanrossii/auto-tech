@@ -2,7 +2,7 @@
    <v-sheet class="w-100 h-100 d-flex justify-center">
       <BaseTable
          :headers="headers"
-         :items="customerList"
+         :items="customersWithTypeDisplay"
          :items-length="customerListPagination.totalItems"
          :page="customerListPagination.page"
          :items-per-page="customerListPagination.quantity"
@@ -32,17 +32,18 @@
       </BaseTable>
    </v-sheet>
 
-   <v-dialog v-model="customerSelectedManipulating" max-width="900px">
+   <v-dialog v-model="customerSelectedManipulating" max-width="1100px">
       <CustomerModal />
    </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { computed, onMounted } from "vue"
 import BaseTable from "../../../components/BaseTable.vue"
 import { useCustomer } from "../providers/customerProvider"
 import { useCustomerComposable } from "../composables/customersComposable"
 import CustomerModal from "../components/CustomerModal.vue"
+import { PersonType } from "../models/constants/CustomerType"
 
 const {
    customerList,
@@ -58,9 +59,19 @@ const {
 const { editCustomer, deleteCustomer, createCustomer, fetchCustomers } =
    useCustomerComposable()
 
+const customersWithTypeDisplay = computed(() => {
+   return customerList.value.map((c: any) => {
+      const matched = PersonType.find((p) => p.value === c.type)
+      return {
+         ...c,
+         typeDisplay: matched?.title ?? String(c.type ?? ""),
+      }
+   })
+})
+
 const headers = [
    { title: "Nome", key: "name" },
-   { title: "Tipo de Pessoa", key: "type" },
+   { title: "Tipo de Pessoa", key: "typeDisplay" },
    { title: "Telefone", key: "cellphone" },
    { title: "Identificador", key: "govIdentifier" },
    {

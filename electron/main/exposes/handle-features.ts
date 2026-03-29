@@ -64,6 +64,10 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
    ipcMain.handle("deleteOrderOfService", async (event, id: number) => {
       await ordersOfServiceService.delete(id)
    })
+
+   ipcMain.handle("getNextOrderOfServiceId", async () => {
+      return await ordersOfServiceService.getNextId()
+   })
    //#endregion
 
    //#region Customers

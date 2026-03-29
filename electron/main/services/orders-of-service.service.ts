@@ -1,7 +1,7 @@
 import { BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import { getDatabaseConnection } from "../database/database"
 import { OrderOfService } from "../entities/orderOfService"
-import { and, count, eq, like, SQL } from "drizzle-orm"
+import { and, count, eq, like, SQL, sql } from "drizzle-orm"
 import * as schema from "../database/schema"
 import { PaginatedResultDto } from "@shared/interfaces/paginated-result.dto"
 import { OrderOfServiceListItemDto } from "@shared/interfaces/orders-of-service/order-of-service-list-item.dto"
@@ -21,6 +21,17 @@ class OrdersOfServiceService {
             services: true,
          },
       })
+   }
+
+   async getNextId(): Promise<number> {
+      const rows = await this._database
+         .select({
+            maxId: sql<number | null>`max(${schema.ordersOfService.id})`,
+         })
+         .from(schema.ordersOfService)
+
+      const maxId = Number(rows[0]?.maxId ?? 0)
+      return (Number.isFinite(maxId) ? maxId : 0) + 1
    }
 
    async getPaginatedAsync(

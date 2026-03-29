@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue"
+import { ref, computed, watchEffect } from "vue"
 
 withDefaults(
    defineProps<{
@@ -88,6 +88,8 @@ withDefaults(
    }>(),
    { readonly: false }
 )
+
+const formValid = defineModel<boolean>("valid", { default: true })
 
 interface PartItem {
    description: string
@@ -140,20 +142,6 @@ const convertPriceToNumber = (price: string | null): number => {
    return parseFloat(price.replace(",", ".")) || 0
 }
 
-const formatPartTotal = (part: PartItem): string => {
-   const quantity = convertToNumber(part.quantity)
-   const price = convertPriceToNumber(part.price)
-   const total = quantity * price
-   if (!Number.isFinite(total) || total <= 0) return ""
-   return (
-      "R$ " +
-      total.toLocaleString("pt-BR", {
-         minimumFractionDigits: 2,
-         maximumFractionDigits: 2,
-      })
-   )
-}
-
 const isPartValid = (part: PartItem): boolean => {
    const hasDescription =
       !!part.description && part.description.trim().length > 0
@@ -179,6 +167,28 @@ const isPartEmpty = (part: PartItem): boolean => {
       part.price.trim().length > 0 &&
       convertPriceToNumber(part.price) > 0
    return !hasDescription && !hasQuantity && !hasPrice
+}
+
+const isPartsFormValid = computed(() => {
+   return parts.value.every((p) => isPartEmpty(p) || isPartValid(p))
+})
+
+watchEffect(() => {
+   formValid.value = isPartsFormValid.value
+})
+
+const formatPartTotal = (part: PartItem): string => {
+   const quantity = convertToNumber(part.quantity)
+   const price = convertPriceToNumber(part.price)
+   const total = quantity * price
+   if (!Number.isFinite(total) || total <= 0) return ""
+   return (
+      "R$ " +
+      total.toLocaleString("pt-BR", {
+         minimumFractionDigits: 2,
+         maximumFractionDigits: 2,
+      })
+   )
 }
 
 const getPartIcon = (

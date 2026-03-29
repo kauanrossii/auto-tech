@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, watchEffect } from "vue"
 
 withDefaults(
    defineProps<{
@@ -64,6 +64,8 @@ withDefaults(
    }>(),
    { readonly: false }
 )
+
+const formValid = defineModel<boolean>("valid", { default: true })
 
 interface ServiceItem {
    id: string
@@ -124,6 +126,24 @@ const isServiceValid = (service: ServiceItem): boolean => {
       convertPriceToNumber(service.price) > 0
    return hasDescription && hasPrice
 }
+
+const isServiceEmpty = (service: ServiceItem): boolean => {
+   const hasDescription =
+      service.description && service.description.trim().length > 0
+   const hasPrice =
+      service.price &&
+      service.price.trim().length > 0 &&
+      convertPriceToNumber(service.price) > 0
+   return !hasDescription && !hasPrice
+}
+
+const isServicesFormValid = computed(() => {
+   return services.value.every((s) => isServiceEmpty(s) || isServiceValid(s))
+})
+
+watchEffect(() => {
+   formValid.value = isServicesFormValid.value
+})
 
 const getServiceIcon = (
    service: ServiceItem

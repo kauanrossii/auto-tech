@@ -42,5 +42,6 @@ export function exposeServicesInMainWorld(
          ipcRenderer.invoke("listOrdersOfService", dto),
       deleteOrderOfService: (id: number) =>
          ipcRenderer.invoke("deleteOrderOfService", id),
+      getNextOrderOfServiceId: () => ipcRenderer.invoke("getNextOrderOfServiceId"),
    })
 }

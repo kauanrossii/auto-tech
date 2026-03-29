@@ -8,7 +8,6 @@
                   id="name-input"
                   variant="outlined"
                   density="compact"
-                  hide-details
                   v-model="formData.name"
                   :disabled="isFieldsDisabled"
                   :rules="readonly ? [] : CustomerRules.name"
@@ -31,7 +30,6 @@
                   density="compact"
                   item-title="title"
                   item-value="value"
-                  hide-details
                   v-model="formData.type"
                   :items="PersonTypeItems"
                   :disabled="isFieldsDisabled"
@@ -44,7 +42,6 @@
             <div class="d-flex flex-column">
                <v-label for="cellphone-input" class="mb-0">Celular</v-label>
                <v-mask-input
-                  hide-details
                   id="cellphone-input"
                   variant="outlined"
                   density="compact"
@@ -61,7 +58,6 @@
             <div class="d-flex flex-column">
                <v-label for="phone-input" class="mb-0">Telefone fixo</v-label>
                <v-mask-input
-                  hide-details
                   id="phone-input"
                   variant="outlined"
                   density="compact"
@@ -78,7 +74,6 @@
             <div class="d-flex flex-column">
                <v-label for="email-input" class="mb-0">E-mail</v-label>
                <v-text-field
-                  hide-details
                   id="email-input"
                   variant="outlined"
                   density="compact"
@@ -96,7 +91,6 @@
                <v-label for="cep-input" class="mb-0">CEP</v-label>
                <v-mask-input
                   v-model="formData.address!.cep"
-                  hide-details
                   id="cep-input"
                   variant="outlined"
                   density="compact"
@@ -113,7 +107,6 @@
             <div class="d-flex flex-column">
                <v-label for="uf-input" class="mb-0">UF</v-label>
                <v-autocomplete
-                  hide-details
                   id="uf-input"
                   variant="outlined"
                   density="compact"
@@ -128,7 +121,6 @@
             <div class="d-flex flex-column">
                <v-label for="city-input" class="mb-0">Cidade</v-label>
                <v-text-field
-                  hide-details
                   id="city-input"
                   variant="outlined"
                   density="compact"
@@ -145,7 +137,6 @@
                   govIdentifierLabel
                }}</v-label>
                <v-mask-input
-                  hide-details
                   id="govIdentifier-input"
                   variant="outlined"
                   density="compact"
@@ -167,7 +158,6 @@
                   govDocumentLabel
                }}</v-label>
                <v-mask-input
-                  hide-details
                   id="govDocument-input"
                   variant="outlined"
                   density="compact"
@@ -189,7 +179,6 @@
             <div class="d-flex flex-column">
                <v-label for="street-input" class="mb-0">Rua</v-label>
                <v-text-field
-                  hide-details
                   id="street-input"
                   variant="outlined"
                   density="compact"
@@ -204,7 +193,6 @@
             <div class="d-flex flex-column">
                <v-label for="district-input" class="mb-0">Bairro</v-label>
                <v-text-field
-                  hide-details
                   id="district-input"
                   variant="outlined"
                   density="compact"
@@ -219,7 +207,6 @@
             <div class="d-flex flex-column">
                <v-label for="unit-input" class="mb-0">Nº/Apto</v-label>
                <v-text-field
-                  hide-details
                   id="unit-input"
                   variant="outlined"
                   density="compact"

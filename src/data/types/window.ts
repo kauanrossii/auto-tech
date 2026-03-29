@@ -48,6 +48,7 @@ declare global {
             dto: SearchOrdersOfServiceDto
          ) => Promise<PaginatedResultDto<OrderOfServiceListItemDto>>
          deleteOrderOfService: (id: number) => Promise<void>
+         getNextOrderOfServiceId: () => Promise<number>
          abc: () => Promise<string>
       }
    }
