@@ -8,6 +8,8 @@ import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/s
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 import { UpdateVehicleDto } from "@shared/interfaces/vehicles/update-vehicle.dto"
+import systemConfigurationsService from "../services/system-configurations.service"
+import { UpdateSystemConfigurationDto } from "@shared/interfaces/system-configurations/update-system-configuration.dto"
 
 export function handleFeatures(ipcMain: Electron.IpcMain) {
    //#region Vehicles
@@ -68,6 +70,19 @@ export function handleFeatures(ipcMain: Electron.IpcMain) {
    ipcMain.handle("getNextOrderOfServiceId", async () => {
       return await ordersOfServiceService.getNextId()
    })
+   //#endregion
+
+   //#region System configuration
+   ipcMain.handle("getSystemConfiguration", async () => {
+      return await systemConfigurationsService.getAsync()
+   })
+
+   ipcMain.handle(
+      "upsertSystemConfiguration",
+      async (event, dto: UpdateSystemConfigurationDto) => {
+         return await systemConfigurationsService.upsertAsync(dto)
+      }
+   )
    //#endregion
 
    //#region Customers

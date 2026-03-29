@@ -15,6 +15,8 @@ import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/search-orders-of-service.dto"
 import { OrderOfServiceListItemDto } from "@shared/interfaces/orders-of-service/order-of-service-list-item.dto"
+import { SystemConfigurationDto } from "@shared/interfaces/system-configurations/system-configuration.dto"
+import { UpdateSystemConfigurationDto } from "@shared/interfaces/system-configurations/update-system-configuration.dto"
 
 declare global {
    interface Window {
@@ -49,7 +51,11 @@ declare global {
          ) => Promise<PaginatedResultDto<OrderOfServiceListItemDto>>
          deleteOrderOfService: (id: number) => Promise<void>
          getNextOrderOfServiceId: () => Promise<number>
-         abc: () => Promise<string>
+
+         getSystemConfiguration: () => Promise<SystemConfigurationDto | null>
+         upsertSystemConfiguration: (
+            dto: UpdateSystemConfigurationDto
+         ) => Promise<SystemConfigurationDto>
       }
    }
 }

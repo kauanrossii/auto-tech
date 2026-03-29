@@ -5,6 +5,7 @@ import { UpdateVehicleDto } from "@shared/interfaces/vehicles/update-vehicle.dto
 import { Customer } from "electron/main/entities/customer"
 import { UpdateCustomerDto } from "@shared/interfaces/customers/update-customer.dto"
 import { SearchOrdersOfServiceDto } from "@shared/interfaces/orders-of-service/search-orders-of-service.dto"
+import { UpdateSystemConfigurationDto } from "@shared/interfaces/system-configurations/update-system-configuration.dto"
 
 export function exposeServicesInMainWorld(
    contextBridge: Electron.ContextBridge,
@@ -43,5 +44,9 @@ export function exposeServicesInMainWorld(
       deleteOrderOfService: (id: number) =>
          ipcRenderer.invoke("deleteOrderOfService", id),
       getNextOrderOfServiceId: () => ipcRenderer.invoke("getNextOrderOfServiceId"),
+
+      getSystemConfiguration: () => ipcRenderer.invoke("getSystemConfiguration"),
+      upsertSystemConfiguration: (dto: UpdateSystemConfigurationDto) =>
+         ipcRenderer.invoke("upsertSystemConfiguration", dto),
    })
 }

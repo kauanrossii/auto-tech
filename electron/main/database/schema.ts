@@ -1,6 +1,14 @@
 import { relations } from "drizzle-orm"
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
+export const systemConfigurations = sqliteTable("systemConfigurations", {
+   id: integer("id").primaryKey({ autoIncrement: true }),
+   companyName: text("companyName"),
+   photoDataUrl: text("photoDataUrl"),
+   photoFileName: text("photoFileName"),
+   updatedAt: integer("updatedAt", { mode: "timestamp" }),
+})
+
 export const addresses = sqliteTable("addresses", {
    id: integer("id").primaryKey({ autoIncrement: true }),
    cep: text("cep").notNull(),
