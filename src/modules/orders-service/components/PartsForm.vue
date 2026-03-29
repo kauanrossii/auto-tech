@@ -1,10 +1,10 @@
 <template>
-   <v-sheet class="pa-4">
-      <v-table height="425px" class="parts-table" density="compact">
+   <v-sheet>
+      <v-table class="parts-table" density="compact">
          <thead>
             <tr>
                <th class="text-center" style="width: 40px"></th>
-               <th class="text-left" style="width: 60%">
+               <th class="text-left" style="width: 50%">
                   <v-label>Descrição *</v-label>
                </th>
                <th class="text-left" style="width: 20%">
@@ -12,6 +12,9 @@
                </th>
                <th class="text-left" style="width: 20%">
                   <v-label>Valor Unitário *</v-label>
+               </th>
+               <th class="text-right" style="width: 10%; padding-right: 0px">
+                  <v-label>Valor total</v-label>
                </th>
             </tr>
          </thead>
@@ -27,19 +30,23 @@
                <td class="pa-2">
                   <v-text-field
                      v-model="part.description"
+                     variant="outlined"
                      density="compact"
                      hide-details
                      placeholder="Descrição da peça"
+                     :disabled="readonly"
                      @input="checkLastRowFilled"
                   />
                </td>
                <td class="pa-2 text-left">
                   <v-text-field
                      v-model="part.quantity"
+                     variant="outlined"
                      density="compact"
                      hide-details
                      placeholder="0"
                      inputmode="numeric"
+                     :disabled="readonly"
                      @input="
                         (event: Event) => handleQuantityInput(event, index)
                      "
@@ -49,19 +56,24 @@
                <td class="pa-2 text-right">
                   <v-text-field
                      v-model="part.price"
+                     variant="outlined"
                      density="compact"
                      hide-details
                      placeholder="0,00"
                      inputmode="decimal"
+                     :disabled="readonly"
                      @input="(event: Event) => handlePriceInput(event, index)"
                      @blur="() => formatPriceOnBlur(index)"
                   />
+               </td>
+               <td class="pa-2 text-right">
+                  {{ formatPartTotal(part) }}
                </td>
             </tr>
          </tbody>
       </v-table>
 
-      <div v-if="parts.length > 0" class="mt-3 text-right">
+      <div v-if="parts.length > 0" class="text-right pt-12">
          <strong>Total: R$ {{ totalPrice }}</strong>
       </div>
    </v-sheet>
@@ -69,6 +81,13 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue"
+
+withDefaults(
+   defineProps<{
+      readonly?: boolean
+   }>(),
+   { readonly: false }
+)
 
 interface PartItem {
    description: string
@@ -119,6 +138,20 @@ const convertToNumber = (value: string | null): number => {
 const convertPriceToNumber = (price: string | null): number => {
    if (!price || typeof price !== "string") return 0
    return parseFloat(price.replace(",", ".")) || 0
+}
+
+const formatPartTotal = (part: PartItem): string => {
+   const quantity = convertToNumber(part.quantity)
+   const price = convertPriceToNumber(part.price)
+   const total = quantity * price
+   if (!Number.isFinite(total) || total <= 0) return ""
+   return (
+      "R$ " +
+      total.toLocaleString("pt-BR", {
+         minimumFractionDigits: 2,
+         maximumFractionDigits: 2,
+      })
+   )
 }
 
 const isPartValid = (part: PartItem): boolean => {

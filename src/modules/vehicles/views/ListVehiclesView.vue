@@ -37,7 +37,7 @@
          <v-card-title :class="modalTitleBackgroundClass" class="py-3">
             {{ modalTitle }}
          </v-card-title>
-         <v-card-text class="overflow-y-auto flex-grow-1 pa-4">
+         <v-card-text class="overflow-y-auto pa-8">
             <VehicleForm v-model:valid="vehicleModalFormValid" />
          </v-card-text>
          <v-divider />

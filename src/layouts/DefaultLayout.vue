@@ -1,6 +1,6 @@
 <template>
    <v-app>
-      <v-layout>
+      <v-layout full-height>
          <app-bar></app-bar>
          <app-view></app-view>
       </v-layout>

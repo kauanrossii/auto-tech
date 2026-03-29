@@ -6,6 +6,7 @@
                <v-label for="plate-input" class="mb-1">Placa *</v-label>
                <v-mask-input
                   id="plate-input"
+                  variant="outlined"
                   density="compact"
                   hide-details
                   v-model="vehicleSelected.plate"
@@ -43,6 +44,7 @@
                   :rules="readonly ? [] : VehicleRules.model"
                   :disabled="isFieldsDisabled"
                   id="model-input"
+                  variant="outlined"
                   density="compact"
                >
                </v-text-field>
@@ -55,6 +57,7 @@
                <v-autocomplete
                   hide-details
                   id="brand-input"
+                  variant="outlined"
                   density="compact"
                   v-model="vehicleSelected.brand"
                   :items="VehicleBrandSelectItems"
@@ -69,6 +72,7 @@
             <v-autocomplete
                hide-details
                id="fuel-input"
+               variant="outlined"
                density="compact"
                v-model="vehicleSelected.fuel"
                :items="FuelSelectItems"
@@ -81,6 +85,7 @@
             <v-text-field
                hide-details
                id="year-input"
+               variant="outlined"
                density="compact"
                v-model="vehicleSelected.year"
                :disabled="isFieldsDisabled"
@@ -92,6 +97,7 @@
             <v-text-field
                hide-details
                id="color-input"
+               variant="outlined"
                density="compact"
                v-model="vehicleSelected.color"
                :disabled="isFieldsDisabled"
@@ -105,6 +111,7 @@
             <v-text-field
                hide-details
                id="mileage-input"
+               variant="outlined"
                density="compact"
                v-model="vehicleSelected.lastMileage"
                :disabled="isFieldsDisabled"
@@ -117,6 +124,7 @@
                <v-text-field
                   id="chassi-input"
                   hide-details
+                  variant="outlined"
                   density="compact"
                   v-model="vehicleSelected.chassi"
                   :disabled="isFieldsDisabled"
@@ -186,5 +194,4 @@ const handlePlateBlur = async () => {
       vehicleSelectedLoading.value = false
    }
 }
-
 </script>

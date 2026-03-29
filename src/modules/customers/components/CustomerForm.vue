@@ -6,11 +6,12 @@
                <v-label for="name-input" class="mb-0">Cliente *</v-label>
                <v-text-field
                   id="name-input"
+                  variant="outlined"
                   density="compact"
                   hide-details
                   v-model="formData.name"
-                  :disabled="isDeletingCustomer"
-                  :rules="CustomerRules.name"
+                  :disabled="isFieldsDisabled"
+                  :rules="readonly ? [] : CustomerRules.name"
                   :error="nameError"
                   :error-messages="nameMessages"
                   @blur="handleNameBlur"
@@ -26,14 +27,15 @@
                >
                <v-autocomplete
                   id="type-input"
+                  variant="outlined"
                   density="compact"
                   item-title="title"
                   item-value="value"
                   hide-details
                   v-model="formData.type"
                   :items="PersonTypeItems"
-                  :disabled="isDeletingCustomer"
-                  :rules="CustomerRules.type"
+                  :disabled="isFieldsDisabled"
+                  :rules="readonly ? [] : CustomerRules.type"
                ></v-autocomplete>
             </div>
          </v-col>
@@ -44,11 +46,12 @@
                <v-mask-input
                   hide-details
                   id="cellphone-input"
+                  variant="outlined"
                   density="compact"
                   mask="(##) #####-####"
                   placeholder="(00) 00000-0000"
                   v-model="formData.cellphone"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isFieldsDisabled"
                >
                </v-mask-input>
             </div>
@@ -60,11 +63,12 @@
                <v-mask-input
                   hide-details
                   id="phone-input"
+                  variant="outlined"
                   density="compact"
                   placeholder="(00) 0000-0000"
                   mask="(##) ####-####"
                   v-model="formData.phone"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isFieldsDisabled"
                >
                </v-mask-input>
             </div>
@@ -76,11 +80,12 @@
                <v-text-field
                   hide-details
                   id="email-input"
+                  variant="outlined"
                   density="compact"
                   type="email"
                   v-model="formData.email"
-                  :disabled="isDeletingCustomer"
-                  :rules="CustomerRules.email"
+                  :disabled="isFieldsDisabled"
+                  :rules="readonly ? [] : CustomerRules.email"
                >
                </v-text-field>
             </div>
@@ -93,10 +98,11 @@
                   v-model="formData.address!.cep"
                   hide-details
                   id="cep-input"
+                  variant="outlined"
                   density="compact"
                   mask="#####-####"
                   placeholder="00000-000"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isFieldsDisabled"
                   :loading="cepLookupLoading"
                >
                </v-mask-input>
@@ -109,10 +115,11 @@
                <v-autocomplete
                   hide-details
                   id="uf-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.address!.uf"
                   :items="stateItems"
-                  :disabled="isDeletingCustomer || cepLookupLoading"
+                  :disabled="isFieldsDisabled || cepLookupLoading"
                ></v-autocomplete>
             </div>
          </v-col>
@@ -123,9 +130,10 @@
                <v-text-field
                   hide-details
                   id="city-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.address!.city"
-                  :disabled="isDeletingCustomer || cepLookupLoading"
+                  :disabled="isFieldsDisabled || cepLookupLoading"
                >
                </v-text-field>
             </div>
@@ -139,10 +147,11 @@
                <v-mask-input
                   hide-details
                   id="govIdentifier-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.govIdentifier"
                   :placeholder="govIdentifierPlaceholder"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isFieldsDisabled"
                   :error="govIdentifierError"
                   :error-messages="govIdentifierMessages"
                   :mask="govIdentifierMask"
@@ -160,13 +169,14 @@
                <v-mask-input
                   hide-details
                   id="govDocument-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.govDocument"
                   :placeholder="
                      formData.type == Person.NATURAL ? '00.000.000-0' : ''
                   "
                   :mask="govDocumentMask"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isFieldsDisabled"
                   :error="govDocumentError"
                   :error-messages="govDocumentMessages"
                   @blur="handleGovDocumentBlur"
@@ -181,9 +191,10 @@
                <v-text-field
                   hide-details
                   id="street-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.address!.street"
-                  :disabled="isDeletingCustomer || cepLookupLoading"
+                  :disabled="isFieldsDisabled || cepLookupLoading"
                >
                </v-text-field>
             </div>
@@ -195,9 +206,10 @@
                <v-text-field
                   hide-details
                   id="district-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.address!.district"
-                  :disabled="isDeletingCustomer || cepLookupLoading"
+                  :disabled="isFieldsDisabled || cepLookupLoading"
                >
                </v-text-field>
             </div>
@@ -209,9 +221,10 @@
                <v-text-field
                   hide-details
                   id="unit-input"
+                  variant="outlined"
                   density="compact"
                   v-model="formData.address!.unit"
-                  :disabled="isDeletingCustomer"
+                  :disabled="isFieldsDisabled"
                >
                </v-text-field>
             </div>
@@ -231,6 +244,13 @@ import { ActionForm } from "@src/data/enums/ActionForm"
 import { Customer } from "electron/main/entities/customer"
 import { CustomerForm } from "../types/customer-form"
 import { Person } from "@shared/enums/person"
+
+const props = withDefaults(
+   defineProps<{
+      readonly?: boolean
+   }>(),
+   { readonly: false }
+)
 
 const customerSelected = injectStrict(CustomerKeys.customerSelected)
 const customerSelectedAction = injectStrict(CustomerKeys.customerSelectedAction)
@@ -342,6 +362,10 @@ const isDeletingCustomer = computed(() => {
    return customerSelectedAction.value === ActionForm.DELETE
 })
 
+const isFieldsDisabled = computed(
+   () => isDeletingCustomer.value || props.readonly
+)
+
 const govIdentifierLabel = computed(() => {
    if (!formData.value.type) {
       return "Registro"
@@ -357,7 +381,7 @@ const govDocumentLabel = computed(() => {
 })
 
 onMounted(() => {
-   if (customerSelected.value) {
+   if (customerSelected.value?.id != null) {
       formData.value = {
          id: customerSelected.value.id,
          name: customerSelected.value.name,
@@ -409,6 +433,7 @@ const validateDuplicateCustomer = async (
 }
 
 const handleNameBlur = async () => {
+   if (props.readonly) return
    await validateDuplicateCustomer(
       formData.value.name,
       nameMessages,
@@ -419,6 +444,7 @@ const handleNameBlur = async () => {
 }
 
 const handleGovDocumentBlur = async () => {
+   if (props.readonly) return
    await validateDuplicateCustomer(
       formData.value.govDocument,
       govDocumentMessages,
@@ -429,6 +455,7 @@ const handleGovDocumentBlur = async () => {
 }
 
 const handleGovIdentifierBlur = async () => {
+   if (props.readonly) return
    await validateDuplicateCustomer(
       formData.value.govIdentifier,
       govIdentifierMessages,

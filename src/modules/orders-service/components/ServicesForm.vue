@@ -1,6 +1,6 @@
 <template>
-   <v-sheet class="pa-4">
-      <v-table height="425px" class="services-table" density="compact">
+   <v-sheet>
+      <v-table class="services-table" density="compact">
          <thead>
             <tr>
                <th class="text-center" style="width: 40px"></th>
@@ -24,19 +24,23 @@
                <td class="pa-2">
                   <v-text-field
                      v-model="service.description"
+                     variant="outlined"
                      density="compact"
                      hide-details
                      placeholder="Descrição do serviço"
+                     :disabled="readonly"
                      @input="ensureGrowWhenLastRowComplete"
                   />
                </td>
                <td class="pa-2 text-right">
                   <v-text-field
                      v-model="service.price"
+                     variant="outlined"
                      density="compact"
                      hide-details
                      placeholder="0,00"
                      inputmode="decimal"
+                     :disabled="readonly"
                      @input="(event: Event) => handlePriceInput(event, index)"
                      @blur="() => formatPriceOnBlur(index)"
                   />
@@ -45,7 +49,7 @@
          </tbody>
       </v-table>
 
-      <div v-if="services.length > 0" class="mt-3 text-right">
+      <div v-if="services.length > 0" class="pt-12 text-right">
          <strong>Total: R$ {{ totalPrice }}</strong>
       </div>
    </v-sheet>
@@ -53,6 +57,13 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue"
+
+withDefaults(
+   defineProps<{
+      readonly?: boolean
+   }>(),
+   { readonly: false }
+)
 
 interface ServiceItem {
    id: string
