@@ -242,7 +242,7 @@ import { computed, ref, type Ref, onMounted, watch } from "vue"
 import { useViaCepAddress } from "@src/modules/address/composables/useViaCepAddress"
 import { ActionForm } from "@src/data/enums/ActionForm"
 import { Customer } from "electron/main/entities/customer"
-import { CustomerForm } from "../types/customer-form"
+import { CustomerFormType } from "../types/customer-form"
 import { Person } from "@shared/enums/person"
 
 const props = withDefaults(
@@ -261,7 +261,7 @@ const customerSelectedLoading = injectStrict(
 const formCustomerValid = defineModel<boolean>("valid", {
    default: () => false,
 })
-const formData: Ref<CustomerForm> = ref({
+const formData: Ref<CustomerFormType> = ref({
    id: null,
    name: "",
    type: null,

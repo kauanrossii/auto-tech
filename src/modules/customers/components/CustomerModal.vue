@@ -40,7 +40,8 @@ import { CustomerKeys } from "../providers/customerKeys"
 import { ActionForm } from "@src/data/enums/ActionForm"
 import { computed, ref } from "vue"
 import { useCustomerComposable } from "../composables/customersComposable"
-import { type CustomerForm } from "../types/customer-form"
+import CustomerForm from "@src/modules/customers/components/CustomerForm.vue"
+import { CustomerFormType } from "../types/customer-form"
 
 const { fetchCustomers, cancelOperation, confirmOperation } =
    useCustomerComposable()
@@ -58,7 +59,7 @@ const customerSelectedManipulating = injectStrict(
 )
 
 const formCustomerValid = ref(false)
-const formData = ref<CustomerForm>({
+const formData = ref<CustomerFormType>({
    id: null,
    name: "",
    type: null,

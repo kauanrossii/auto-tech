@@ -3,7 +3,7 @@ import { Customer } from "../../../../electron/main/entities/customer"
 import { ActionForm } from "../../../data/enums/ActionForm"
 import { SearchCustomersFilters } from "@shared/interfaces/customers/search-customers.dto"
 import { PaginationDto } from "@shared/interfaces/pagination.dto"
-import { CustomerForm } from "../types/customer-form"
+import { CustomerFormType } from "../types/customer-form"
 import { CreateCustomerDto } from "@shared/interfaces/customers/create-customer.dto"
 
 export function useCustomerComposable() {
@@ -30,7 +30,7 @@ export function useCustomerComposable() {
 
    const editCustomer = async (
       id: number,
-      item: Ref<CustomerForm>,
+      item: Ref<CustomerFormType>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -41,7 +41,7 @@ export function useCustomerComposable() {
    }
 
    const createCustomer = (
-      item: Ref<CustomerForm>,
+      item: Ref<CustomerFormType>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -53,7 +53,7 @@ export function useCustomerComposable() {
    }
 
    const cleanFormCustomer = (
-      item: Ref<CustomerForm>,
+      item: Ref<CustomerFormType>,
       action: Ref<ActionForm>,
       manipulating: Ref<boolean>
    ) => {
@@ -75,14 +75,14 @@ export function useCustomerComposable() {
             street: null,
             unit: null,
          },
-      } as CustomerForm
+      } as CustomerFormType
       action.value = ActionForm.NONE
       manipulating.value = false
    }
 
    const deleteCustomer = async (
       id: number,
-      item: Ref<CustomerForm>,
+      item: Ref<CustomerFormType>,
       loading: Ref<boolean>,
       manipulating: Ref<boolean>,
       action: Ref<ActionForm>
@@ -94,7 +94,7 @@ export function useCustomerComposable() {
 
    const fetchCustomerById = async (
       id: number,
-      item: Ref<CustomerForm>,
+      item: Ref<CustomerFormType>,
       loading: Ref<boolean>
    ) => {
       loading.value = true
@@ -111,7 +111,7 @@ export function useCustomerComposable() {
    }
 
    const confirmOperation = async (
-      item: Ref<CustomerForm>,
+      item: Ref<CustomerFormType>,
       loading: Ref<boolean>,
       action: Ref<ActionForm>
    ): Promise<number | void> => {

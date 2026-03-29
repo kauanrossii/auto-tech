@@ -1,6 +1,6 @@
 import { AddressForm } from "@src/modules/address/types/address-form"
 
-export interface CustomerForm {
+export interface CustomerFormType {
    id: number | null
    name: string
    type: number | null
